@@ -1,0 +1,7 @@
+interface:
+  display_name: "Build Domain Wiki"
+  short_description: "构建全域覆盖、证据可追踪的 DDD 领域知识 Wiki"
+  default_prompt: "Use $build-domain-wiki to build a full-coverage, evidence-backed DDD wiki for this repository."
+
+policy:
+  allow_implicit_invocation: false
