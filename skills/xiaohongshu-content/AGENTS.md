@@ -35,10 +35,18 @@
 
 - **合规第一**：不做订阅/跨区购买/境外账号获取/翻墙类内容（小红书明令禁止，会下架甚至处罚）。
 - **账号信息**走 `.env`（已 `.gitignore` 排除），不硬编码、不提交。
-- **`posts/`** 是用户私人发布归档（`.gitignore` 排除）：不进公开仓库、不外发、改写前先读别乱删。
+- **`posts/`** 是用户私人发布归档：**绝不进任何公开仓库、不外发**、改写前先读别乱删。是否提交到你自己的**私有**仓库由使用者决定（本 danqing 仓已转 Private，`posts/` 在这里正常入库）。
 - **真实性**：文案里的"亲测/我的用法"必须真；转载标清出处，别包装成原创。
 
 ## 提交约定
 
-- 默认在分支上改；`posts/` 与 `.env` 不提交；commit 说明用中文、讲清价值。
+- 默认在分支上改；`.env` 永不提交，`posts/` 绝不进任何公开仓库；commit 说明用中文、讲清价值。
 - `.claude/skills/humanizer-zh/` 是 vendored（op7418/Humanizer-zh，MIT），保留其 LICENSE 与出处。
+
+## 公开分发副本（seasonsolt/skills）
+
+本仓库的可复用技能对外发布在公开仓库 **[seasonsolt/skills](https://github.com/seasonsolt/skills)**（`skills/xiaohongshu-content/`、`skills/humanizer-zh/`）。
+
+- **真源始终是本仓 `.claude/skills/`**；公开仓是下游镜像，别在公开仓直接改。
+- 改完技能后用 `python scripts/publish_skills.py --target <skills 工作副本>` 装配同步，复核后加 `--push` 推送。
+- 装配时会把 `assets/card-template/`、`examples/note.template.md`、`AGENTS.md`、`CONTEXT.md` 一并打包进技能目录，使公开副本自洽；`posts/`、`.env` 等私人内容永不外发。
