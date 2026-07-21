@@ -1,0 +1,94 @@
+{
+  "skill_name": "write-daily-report",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "汇总今天活跃的 Codex、Claude Code 和 Pi Agent 会话生成日报。工作目录是 ~/work/acme 和 ~/clients/northwind；个人博客、旅行计划和全局 AI 配置都在其他目录。",
+      "expected_output": "只读取两个显式批准目录内的会话，排除范围外的个人活动，并说明实际可用的会话来源。",
+      "files": [],
+      "expectations": [
+        "使用用户明确给出的两个工作根目录，不依赖任何内置个人路径",
+        "不读取或纳入批准目录之外的个人会话正文",
+        "最终日报不泄露本地目录或会话文件路径"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "帮我从今天的本地 AI 会话写日结。我没有在消息里写目录，但 DAILY_REPORT_WORK_ROOTS 已配置为两个团队仓库根目录。",
+      "expected_output": "从环境变量解析多个工作根目录并执行采集；不会因为缺少命令行参数而回退到作者路径。",
+      "files": [],
+      "expectations": [
+        "在没有显式目录时使用 DAILY_REPORT_WORK_ROOTS",
+        "支持当前操作系统路径分隔符定义的多个目录",
+        "不使用硬编码默认工作目录"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "今天同一轮订单服务测试在 Codex 主任务、两个委派任务、Claude 续接会话和 Pi Agent 中都出现；最终汇总为新增 24 条测试、行覆盖率提升 1.2pp。请生成日报。",
+      "expected_output": "跨客户端和委派关系合并同一成果，只统计一次最终的 24 条测试和 1.2pp。",
+      "files": [],
+      "expectations": [
+        "将重复会话合并为一条成果链",
+        "24 条测试和 1.2pp 各只出现为一次成果统计",
+        "采用最新且证据最完整的最终状态"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "我是内容运营，今天在 ~/work/brand-content 完成了小红书选题、抖音脚本和投放复盘，这些都是岗位目标。请用这个目录的会话写日报。",
+      "expected_output": "按用户岗位和显式范围纳入内容运营成果，不套用开发者或作者个人的排除规则。",
+      "files": [],
+      "expectations": [
+        "将内容生产和运营成果视为有效岗位交付",
+        "根据用户岗位与项目证据判断相关性",
+        "输出包含结果或交付物而不是流水账"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "一个 Codex 任务的 cwd 是 ~/.codex/worktrees/2581/service，git rev-parse --git-common-dir 返回 ~/work/acme/service/.git。另一个临时目录会话只在正文里提到 acme。请判断日报采集范围。",
+      "expected_output": "纳入 Git common-dir 证明源仓库属于批准范围的 Codex worktree，排除仅在正文提到项目名的临时会话。",
+      "files": [],
+      "expectations": [
+        "使用 Git common-dir 验证 Codex worktree 的源仓库",
+        "不根据正文关键词猜测目录归属",
+        "不自动信任 ~/.codex/worktrees 下的所有会话"
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "从今天的 AI 会话写日报。Pi Agent 的一个 session header 中 cwd 位于批准的工作目录，当前分支完成 8 条回归测试；同一 JSONL 还保留已放弃分支的错误结论和多段 tool result。另一个 Pi session 在个人项目目录。",
+      "expected_output": "先按 Pi header 的真实 cwd 过滤，只纳入当前有效分支的 user/assistant 文本，排除废弃分支、tool result 和个人项目。",
+      "files": [],
+      "expectations": [
+        "在读取消息正文前使用 Pi session header 的 cwd 做范围过滤",
+        "只使用当前有效分支的 user/assistant 文本",
+        "排除 tool result、废弃分支和范围外 session"
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "Please turn these notes into an English daily update for my manager: finalized the onboarding flow spec; engineering review is pending; tomorrow I will resolve the two open API questions. Do not scan local sessions.",
+      "expected_output": "Use the supplied notes only, write in English, preserve the pending state, and produce an actionable next-day plan.",
+      "files": [],
+      "expectations": [
+        "Does not attempt local session collection",
+        "Writes the report in English",
+        "Does not misstate the pending engineering review as complete",
+        "Includes the two open API questions as an actionable next step"
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "自动汇总我今天所有 AI 会话写日报。当前目录是下载文件夹，没有配置 DAILY_REPORT_WORK_ROOTS，也没有提供工作目录。",
+      "expected_output": "在读取会话正文前只询问一个简短的工作目录范围问题，不扫描主目录或猜测项目。",
+      "files": [],
+      "expectations": [
+        "不会默认扫描主目录或其他宽泛目录",
+        "不会在缺少范围时读取会话正文",
+        "只提出一个合并后的简短范围问题"
+      ]
+    }
+  ]
+}
