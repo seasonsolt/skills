@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "batch_id": "<batch-id>",
+  "service": "<service>",
+  "workflow_id": "<workflow-id>",
+  "campaign_dir": "<exact-workspace-campaign-artifact-directory>",
+  "docs_path": "docs/tests/<workflow>-tests",
+  "production_fix_policy": "record-only-confirmed",
+  "unit_test_runs": [
+    {
+      "run_id": "unit-1",
+      "report_files": [
+        {
+          "path": "<surefire-xml-path>",
+          "sha256": "<sha256>"
+        }
+      ]
+    }
+  ],
+  "integration_test_runs": [
+    {
+      "run_id": "integration-1",
+      "report_files": [
+        {
+          "path": "<failsafe-run-1-xml-path>",
+          "sha256": "<sha256>"
+        }
+      ]
+    }
+  ],
+  "copied_artifacts": [
+    {
+      "source": "<campaign-artifact-path>",
+      "target": "<repository-docs-tests-path>",
+      "sha256": "<sha256>"
+    }
+  ]
+}

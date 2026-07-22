@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "batch_id": "<batch-id>",
+  "workflow_id": "<workflow-id>",
+  "risk_ids": [
+    "issues/01"
+  ],
+  "accepted_by": "<actual-approver>",
+  "accepted_at": "<ISO-8601-with-timezone>",
+  "decision_source": "<verbatim-current-user-acceptance>",
+  "scope": "residual-risk-only"
+}

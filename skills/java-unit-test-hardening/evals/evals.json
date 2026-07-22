@@ -1,0 +1,61 @@
+{
+  "skill_name": "java-unit-test-hardening",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "显式使用 $java-unit-test-hardening。目标是 /work/payments，一个干净的 Java 21 多模块 Maven 仓库；campaign 证据放到 /work/test-campaigns。请先完成只读预检和核心流候选清单，不要创建分支或修改代码。",
+      "expected_output": "直接对用户指定仓库运行独立预检，绑定外置 campaign 路径，盘点模块与核心流，并在任何写操作前等待用户选择批次。",
+      "files": [],
+      "expectations": [
+        "使用 --repository-root 和 --campaign-workspace，不要求 ai-workspace 或 services 挂载",
+        "预检阶段不创建分支、campaign 文件或代码索引",
+        "展示全部候选 workflow 后等待结构化选择"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "用 $java-unit-test-hardening 给这个仓库补存量测试。git status 里已有我改到一半的 OrderService.java 和一个未跟踪 notes.md，你可以忽略它们继续。",
+      "expected_output": "以 WORKTREE_NOT_CLEAN 停止，不 stash、清理、覆盖或把用户修改分类为可忽略。",
+      "files": [],
+      "expectations": [
+        "明确返回 WORKTREE_NOT_CLEAN",
+        "不会运行 stash、clean、reset 或删除未跟踪文件",
+        "要求用户提供专用干净 worktree 后整体重跑预检"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "显式使用 $java-unit-test-hardening。测试发现重复扣款，当前实现确实会扣两次，但我还没授权改生产代码。请把这个 workflow 收口。",
+      "expected_output": "保留当前行为刻画测试和本地 defect ticket，把期望行为与风险写清；不改生产代码，也不创建禁用的未来回归测试。",
+      "files": [],
+      "expectations": [
+        "保持 production-fix-policy: record-only-confirmed",
+        "创建启用的 characterization test 并在 ticket 中记录精确 TestClass#method",
+        "不修改生产源码，不创建 disabled expected-behavior test",
+        "把已确认缺陷作为未解决风险而非伪装成通过"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "使用 $java-unit-test-hardening 加固 MyBatis 的库存 CAS Mapper。仓库没有 db/schema，但我本机另一个项目有一份差不多的建表 SQL；Docker 当前不可用。",
+      "expected_output": "拒绝引用兄弟仓库 schema 或因 Docker 缺失跳过必需集成测试；要求仓库内权威来源或用户单独授权只读导出。",
+      "files": [],
+      "expectations": [
+        "不复制或引用兄弟仓库 schema",
+        "不把 Docker 不可用当成 integration lane 不适用证据",
+        "只接受仓库内 tracked-clean schema/完整迁移链，或单独授权的只读导出",
+        "不执行 DDL"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "请提高这个 Spring Boot 项目的单测覆盖率到 80%，顺手修几个失败测试。",
+      "expected_output": "不自动触发该显式调用 skill；按普通测试或调试请求处理。",
+      "files": [],
+      "expectations": [
+        "不会仅凭单测、覆盖率或失败测试请求自动调用 java-unit-test-hardening",
+        "不会创建 campaign journal 或要求完整核心流盘点"
+      ]
+    }
+  ]
+}
