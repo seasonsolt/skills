@@ -1,0 +1,42 @@
+{
+  "version": 2,
+  "batch_id": "<service>-<yyyymmdd>-wave-<nn>",
+  "service": "<service>",
+  "workspace_root": "<exact-real-external-campaign-workspace-path>",
+  "repository_root": "<exact-real-repository-path>",
+  "branch": "<branch>",
+  "baseline": "0000000000000000000000000000000000000000",
+  "inventory_path": "../../CORE-FLOW-INVENTORY.md",
+  "inventory_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "production_fix_policy": "record-only-confirmed",
+  "execution_mode": "sequential",
+  "max_concurrent_workflows": 1,
+  "selection": {
+    "approved_by": "<actual-approver>",
+    "approved_at": "<ISO-8601-with-timezone>",
+    "decision_source": "<verbatim-current-user-selection>"
+  },
+  "agent_policy": {
+    "coordinator": "<coordinator-agent-id>",
+    "initial_writer": "<single-long-lived-writer-agent-id>",
+    "read_only_subagents": true
+  },
+  "workflows": [
+    {
+      "workflow_id": "<workflow-id>",
+      "module_id": "<module-id>",
+      "order": 1,
+      "dependencies": [],
+      "worktree": null,
+      "branch": null,
+      "writer": null,
+      "source_status": "pending",
+      "artifact_dir": ".scratch/<service>-<baseline>-tests/<workflow>-tests",
+      "docs_path": "docs/tests/<workflow>-tests",
+      "test_build_files": [],
+      "integration_lane": "required"
+    }
+  ],
+  "repository_baseline": null,
+  "transitions": []
+}

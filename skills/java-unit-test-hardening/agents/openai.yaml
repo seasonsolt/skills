@@ -1,0 +1,7 @@
+interface:
+  display_name: "Java 单元测试加固"
+  short_description: "为任意既有 Java/Maven 仓库建立行为测试安全网"
+  default_prompt: "显式使用 $java-unit-test-hardening：对我指定的干净 Java/Maven 仓库启动外置 service campaign，盘点核心流，确认本批 workflow，再执行窄范围 TDD 与证据收口。"
+
+policy:
+  allow_implicit_invocation: false
