@@ -45,7 +45,7 @@
 
 ## 公开分发副本（seasonsolt/skills）
 
-本仓库的可复用技能对外发布在公开仓库 **[seasonsolt/skills](https://github.com/seasonsolt/skills)**（`skills/xiaohongshu-content/`、`skills/humanizer-zh/`）。
+本仓库的可复用技能对外发布在公开仓库 **[seasonsolt/skills](https://github.com/seasonsolt/skills)**（`skills/xiaohongshu-content/`、`skills/humanizer-zh/`、`skills/rn-motion-director/`）。
 
 - **真源始终是本仓 `.claude/skills/`**；公开仓是下游镜像，别在公开仓直接改。
 - 改完技能后用 `python scripts/publish_skills.py --target <skills 工作副本>` 装配同步，复核后加 `--push` 推送。
