@@ -9,6 +9,7 @@ Reusable agent skills maintained by seasonsolt.
 - [`humanizer-zh`](skills/humanizer-zh/): 中文文本去 AI 味(24 项 AI 痕迹 + 50 分 rubric),vendored from op7418/Humanizer-zh (MIT),保留原 LICENSE 与出处。
 - [`write-daily-report`](skills/write-daily-report/): 从用户记录或批准工作目录内的 Codex、Claude Code 与 Pi Agent 会话生成可直接提交的高质量日报；不预设个人路径或职业。
 - [`java-unit-test-hardening`](skills/java-unit-test-hardening/): 为既有 Java/Maven 仓库按核心业务流建立可持续的行为测试安全网，含批次 journal、边界审计、缺陷刻画和可复验证据。
+- [`rn-motion-director`](skills/rn-motion-director/): 把主题转成动效优先的视频方案,用运动语法与 anti-PPT gate 指导分镜、实现和质检。
 
 `build-domain-wiki` and `java-unit-test-hardening` are intentionally manual-only. Invoke them explicitly as `$build-domain-wiki` / `$java-unit-test-hardening`, or ask the agent to use the skill by name.
 
