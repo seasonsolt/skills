@@ -189,6 +189,9 @@ class StandalonePreflightTest(unittest.TestCase):
             payload["result"], "CAMPAIGN_WORKSPACE_INSIDE_REPOSITORY"
         )
 
+    def pending_types(self, payload: dict) -> list[str]:
+        return [item["type"] for item in payload.get("pending_decisions", [])]
+
     def test_invalid_repository_name_requires_explicit_service_id(self) -> None:
         renamed = self.root / "order service"
         self.repository.rename(renamed)
@@ -197,7 +200,8 @@ class StandalonePreflightTest(unittest.TestCase):
         result, payload = self.run_preflight("--service-campaign")
 
         self.assertEqual(result.returncode, 2)
-        self.assertEqual(payload["result"], "SERVICE_ID_REQUIRED")
+        self.assertEqual(payload["result"], "DECISIONS_REQUIRED")
+        self.assertIn("SERVICE_ID_REQUIRED", self.pending_types(payload))
 
         ready, ready_payload = self.run_preflight(
             "--service-campaign", "--service-id", "order-service"
@@ -230,7 +234,8 @@ class StandalonePreflightTest(unittest.TestCase):
         result, payload = self.run_preflight()
 
         self.assertEqual(result.returncode, 2)
-        self.assertEqual(payload["result"], "MODULE_SELECTION_REQUIRED")
+        self.assertEqual(payload["result"], "DECISIONS_REQUIRED")
+        self.assertEqual(self.pending_types(payload), ["MODULE_SELECTION_REQUIRED"])
         self.assertEqual(payload["modules"], ["api", "service"])
 
         ready, ready_payload = self.run_preflight("--module", "api")
@@ -243,7 +248,30 @@ class StandalonePreflightTest(unittest.TestCase):
         result, payload = self.run_preflight("--module", "missing")
 
         self.assertEqual(result.returncode, 2)
-        self.assertEqual(payload["result"], "MODULE_INVALID")
+        self.assertEqual(payload["result"], "DECISIONS_REQUIRED")
+        # 无效模块只报一条 MODULE_INVALID（自带候选列表），
+        # 不再叠加一条重复的 MODULE_SELECTION_REQUIRED。
+        self.assertEqual(self.pending_types(payload), ["MODULE_INVALID"])
+        decision = payload["pending_decisions"][0]
+        self.assertEqual(decision["modules"], ["api"])
+
+    def test_all_pending_decisions_are_collected_in_one_run(self) -> None:
+        # 收集模式：service-id 与模块选择同时缺失时一次性带出，
+        # 一次复合答复后重跑一次预检即可，不再串行往返。
+        self.make_modules()
+        renamed = self.root / "order service"
+        self.repository.rename(renamed)
+        self.repository = renamed
+
+        result, payload = self.run_preflight()
+
+        self.assertEqual(result.returncode, 2)
+        self.assertEqual(payload["result"], "DECISIONS_REQUIRED")
+        self.assertEqual(
+            self.pending_types(payload),
+            ["SERVICE_ID_REQUIRED", "MODULE_SELECTION_REQUIRED"],
+        )
+        self.assertIsNone(payload["campaign_root"])
 
     def test_service_campaign_cannot_also_bind_module(self) -> None:
         self.make_modules(("api",))

@@ -487,16 +487,21 @@ def inspect(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
             repository_root=str(repository_root),
         )
 
+    # 决策类事项统一收集：不在第一个待决事项处停下，而是继续评估其余门禁，
+    # 最终一次性返回全部待决事项，避免"回答一项-重跑-又停一项"的串行往返。
+    # 硬阻断（脏 worktree、冲突、结构错误等）仍然立即停止。
+    pending_decisions: list[dict[str, Any]] = []
     service_id = args.service_id or repository_root.name
-    if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]*", service_id) or service_id in {
-        ".",
-        "..",
-    }:
-        raise PreflightError(
-            "SERVICE_ID_REQUIRED",
-            "仓库目录名不能安全用作 campaign 标识；请显式传入 --service-id",
-            USER_DECISION_REQUIRED,
-            repository_name=repository_root.name,
+    valid_service_id = bool(
+        re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]*", service_id)
+    ) and service_id not in {".", ".."}
+    if not valid_service_id:
+        pending_decisions.append(
+            {
+                "type": "SERVICE_ID_REQUIRED",
+                "message": "仓库目录名不能安全用作 campaign 标识；请显式传入 --service-id",
+                "repository_name": repository_root.name,
+            }
         )
 
     campaign_workspace = args.campaign_workspace.expanduser().resolve()
@@ -515,17 +520,20 @@ def inspect(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
             campaign_workspace=str(campaign_workspace),
             repository_root=str(repository_root),
         )
-    campaign_root = (
-        campaign_workspace / ".scratch" / f"{service_id}-test-campaign"
-    ).resolve()
-    if is_within(campaign_root, repository_root):
-        raise PreflightError(
-            "CAMPAIGN_WORKSPACE_INSIDE_REPOSITORY",
-            "解析后的 campaign 路径位于目标仓库内",
-            HARD_BLOCK,
-            campaign_root=str(campaign_root),
-            repository_root=str(repository_root),
-        )
+    # campaign 路径依赖 service_id：待用户补充 --service-id 重跑时再解析与校验。
+    campaign_root: Path | None = None
+    if valid_service_id:
+        campaign_root = (
+            campaign_workspace / ".scratch" / f"{service_id}-test-campaign"
+        ).resolve()
+        if is_within(campaign_root, repository_root):
+            raise PreflightError(
+                "CAMPAIGN_WORKSPACE_INSIDE_REPOSITORY",
+                "解析后的 campaign 路径位于目标仓库内",
+                HARD_BLOCK,
+                campaign_root=str(campaign_root),
+                repository_root=str(repository_root),
+            )
     if args.service_campaign and args.module:
         raise PreflightError(
             "MODULE_SCOPE_CONFLICT",
@@ -541,13 +549,16 @@ def inspect(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     baseline = git(repository_root, "rev-parse", "HEAD")
     tracked, conflicts = tracked_state(repository_root)
     untracked = untracked_files(repository_root)
-    backlog = campaign_root / "BACKLOG.md"
-    resume_candidate = is_campaign_resume(backlog, branch)
+    resume_candidate = (
+        is_campaign_resume(campaign_root / "BACKLOG.md", branch)
+        if campaign_root is not None
+        else False
+    )
     common_facts = {
         "service": service_id,
         "repository_root": str(repository_root),
         "campaign_workspace": str(campaign_workspace),
-        "campaign_root": str(campaign_root),
+        "campaign_root": str(campaign_root) if campaign_root is not None else None,
         "branch": branch,
         "baseline": baseline,
         "tracked_changes": tracked,
@@ -583,13 +594,14 @@ def inspect(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     selected_module = args.module
     target_scope = "service-campaign" if args.service_campaign else "module"
     if selected_module and selected_module not in modules:
-        raise PreflightError(
-            "MODULE_INVALID",
-            f"模块不在根 pom.xml 的 reactor 中：{selected_module}",
-            USER_DECISION_REQUIRED,
-            modules=modules,
-            **common_facts,
+        pending_decisions.append(
+            {
+                "type": "MODULE_INVALID",
+                "message": f"模块不在根 pom.xml 的 reactor 中：{selected_module}",
+                "modules": modules,
+            }
         )
+        selected_module = None
     if args.service_campaign:
         for module in modules:
             validate_maven_module_root(
@@ -605,31 +617,52 @@ def inspect(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
             invalid_result="MODULE_INVALID",
             exit_code=USER_DECISION_REQUIRED,
         )
-    if modules and not selected_module and not args.service_campaign:
-        raise PreflightError(
-            "MODULE_SELECTION_REQUIRED",
-            "目标是多模块 Maven 仓库；请选择一个模块或使用 --service-campaign",
-            USER_DECISION_REQUIRED,
-            modules=modules,
-            module=None,
-            target_scope=target_scope,
-            **common_facts,
+    if (
+        modules
+        and not selected_module
+        and not args.service_campaign
+        and not any(
+            item["type"] == "MODULE_INVALID" for item in pending_decisions
+        )
+    ):
+        pending_decisions.append(
+            {
+                "type": "MODULE_SELECTION_REQUIRED",
+                "message": "目标是多模块 Maven 仓库；请选择一个模块或使用 --service-campaign",
+                "modules": modules,
+            }
         )
 
     origin_url = sanitized_repository_url(
         git_optional(repository_root, "remote", "get-url", "origin")
     )
+    shared_facts = {
+        **common_facts,
+        "module": selected_module,
+        "modules": modules,
+        "target_scope": target_scope,
+        "origin_url": origin_url,
+        "repository_identity_verified": True,
+        "repository_identity_reason": "用户显式提供的 real path 与 Git top-level 一致",
+    }
+    if pending_decisions:
+        return (
+            {
+                "result": "DECISIONS_REQUIRED",
+                "message": (
+                    f"预检发现 {len(pending_decisions)} 项待决事项；"
+                    "请在一条复合消息中带默认值一次问清，处理后重跑一次预检即可"
+                ),
+                "pending_decisions": pending_decisions,
+                **shared_facts,
+            },
+            USER_DECISION_REQUIRED,
+        )
     return (
         {
             "result": "READY",
             "message": "只读预检通过；下一步仍需读取仓库规范、建立核心流证据并让用户确认批次。",
-            **common_facts,
-            "module": selected_module,
-            "modules": modules,
-            "target_scope": target_scope,
-            "origin_url": origin_url,
-            "repository_identity_verified": True,
-            "repository_identity_reason": "用户显式提供的 real path 与 Git top-level 一致",
+            **shared_facts,
         },
         0,
     )

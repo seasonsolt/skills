@@ -66,7 +66,7 @@ python3 "<skill-root>/scripts/preflight.py" \
 - `READY`：继续；输出会绑定 real path、branch、HEAD、origin、Maven modules 和 campaign 路径。
 - `WORKTREE_NOT_CLEAN`、`GIT_CONFLICT`、`GIT_OPERATION_IN_PROGRESS`：硬停止，由用户先处理现有状态。
 - `REPOSITORY_NOT_ROOT`、`UNSUPPORTED_PROJECT`、`MAVEN_INVALID`：修正目标或仓库结构后重跑。
-- `SERVICE_ID_REQUIRED`、`MODULE_SELECTION_REQUIRED`：展示候选值并等待用户选择。
+- `DECISIONS_REQUIRED`：全部待决事项（service-id、模块选择）已收集在 `pending_decisions` 中一次性返回。在一条复合消息里逐项给出候选值和推荐默认值，等待一次答复，然后重跑一次预检；不得逐项分次询问。
 - 其他 exit 3：硬停止，不得绕过。
 
 预检只读：不创建 campaign、分支或 worktree，不安装工具，不初始化代码索引。
@@ -87,7 +87,7 @@ python3 "<skill-root>/scripts/preflight.py" \
 
 行为矩阵决定测试范围，不设置通用 unit/integration 用例数量下限。每个测试应对应不同的输入分区、状态、顺序、持久化结果、租户边界、重试/重复条件或失败语义。
 
-在一次交互中展示本波次全部候选 workflow，并等待结构化选择，例如 `select: 1,3`。每项展示 workflow、module、风险、依赖、integration lane、artifact/docs 路径和允许修改的 POM；不得静默追加 workflow。
+在一次交互中展示本波次全部候选 workflow，并给出推荐默认选择（按风险序全选无阻塞的核心 workflow），让一句认可答复（例如 `ok`）即可确认批次；显式 `select: 1,3` 覆盖默认。每项展示 workflow、module、风险、依赖、integration lane、artifact/docs 路径和允许修改的 POM；不得静默追加 workflow。
 
 确认后从 `BATCH-RUN.json` 生成：
 
