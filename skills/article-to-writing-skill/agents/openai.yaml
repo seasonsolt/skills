@@ -1,4 +1,0 @@
-interface:
-  display_name: "Article to Writing Skill"
-  short_description: "Distill reusable writing skills from source articles"
-  default_prompt: "Given source article(s), distill and validate a reusable writing Skill without copying distinctive wording."

@@ -1,0 +1,9 @@
+.env
+.env.*
+!.env.example
+__pycache__/
+*.py[cod]
+
+# Local reproducibility runs may contain paid API outputs.
+marketing/writing-skill-trainer/runs/
+marketing/writing-skill-trainer/.cache/

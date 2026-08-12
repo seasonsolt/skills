@@ -1,0 +1,615 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Writing Skill Trainer · DeepSeek 实测</title>
+<style>
+:root{--ink:#17221c;--muted:#68736d;--paper:#f5f2e9;--card:#fffdf7;--line:#d9d5c9;--green:#165c3a;--lime:#d9f26a;--red:#8e3f30;--shadow:0 18px 60px rgba(28,45,35,.09)}
+*{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;color:var(--ink);background:var(--paper);font-family:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Noto Sans CJK SC",sans-serif;line-height:1.7}
+a{color:var(--green)} .wrap{max-width:1180px;margin:auto;padding:0 24px} .hero{padding:88px 0 64px;background:var(--ink);color:#fff;overflow:hidden;position:relative} .hero:after{content:"";position:absolute;width:460px;height:460px;border-radius:50%;background:var(--lime);filter:blur(120px);opacity:.18;right:-100px;top:-170px} .kicker,.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:750;color:var(--green)} .hero .kicker{color:var(--lime)} h1{font-size:clamp(42px,7vw,82px);line-height:1.03;letter-spacing:-.05em;margin:18px 0 24px;max-width:940px} .hero-copy{font-size:20px;color:#d7ded9;max-width:780px} .hero-copy strong{color:#fff} .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:48px;position:relative;z-index:1} .stat{border:1px solid #425048;border-radius:18px;padding:20px;background:#ffffff08} .stat strong{font-size:34px;display:block;color:var(--lime)} .stat span{font-size:13px;color:#bac6bf} .disclosure{margin-top:22px;color:#9faaa4;font-size:13px;max-width:920px}
+main{padding:64px 0 100px} .intro{display:grid;grid-template-columns:1.3fr .7fr;gap:24px;margin-bottom:70px} .panel{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:28px;box-shadow:var(--shadow)} .panel h2{font-size:30px;margin:0 0 14px} .panel ul{padding-left:20px} .warning{background:#fff4d7;border-color:#e7cf8f} .scenario{padding:60px 0;border-top:1px solid var(--line)} .scenario-head{display:grid;grid-template-columns:1.3fr .7fr;gap:36px;align-items:end} h2{font-size:42px;line-height:1.15;letter-spacing:-.03em;margin:8px 0 12px} .scenario-head p{color:var(--muted);font-size:17px;max-width:720px} .mini-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px} .mini-stats div{background:var(--card);border:1px solid var(--line);padding:15px;border-radius:14px} .mini-stats strong{font-size:24px;display:block} .mini-stats span{color:var(--muted);font-size:11px;line-height:1.35;display:block} details{margin:18px 0;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:0 18px} summary{cursor:pointer;font-weight:700;padding:14px 0} pre{white-space:pre-wrap;word-break:break-word;font:13px/1.7 ui-monospace,SFMono-Regular,Menlo,monospace;background:#17221c;color:#dfe9e2;border-radius:12px;padding:18px;max-height:620px;overflow:auto} .verdict{margin:28px 0 16px;border-left:4px solid var(--green);background:#eaf4ed;padding:15px 18px;border-radius:0 12px 12px 0} .outputs{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start} .output-card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:var(--shadow)} .output-card.fail{border-color:#d8afa7} .output-card header{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:12px} .output-card h4{margin:0;font-size:22px} .score{font-size:26px;font-weight:800} .score small{font-size:12px;color:var(--muted)} .checks{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0} .checks span{font-size:11px;padding:4px 8px;background:#edf0ed;border-radius:100px} .checks .pass{background:#dff0e5;color:var(--green)} .checks .fail{background:#f4dfda;color:var(--red)} .failure{font-size:12px;background:#fff0ec;color:var(--red);padding:9px;border-radius:8px;margin-bottom:12px} .prose{white-space:pre-wrap;font-family:ui-serif,"Songti SC",STSong,serif;font-size:16px;line-height:1.9;max-height:720px;overflow:auto;padding-right:8px} .table-wrap{overflow:auto;margin-bottom:18px} table{border-collapse:collapse;width:100%;font-size:12px} th,td{text-align:left;padding:10px;border-bottom:1px solid var(--line);vertical-align:top} .artifact-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding-bottom:18px} footer{padding:40px 0 70px;color:var(--muted);border-top:1px solid var(--line)} code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+@media(max-width:820px){.stats{grid-template-columns:1fr 1fr}.intro,.scenario-head,.outputs,.artifact-grid{grid-template-columns:1fr}h2{font-size:34px}.mini-stats{margin-top:10px}}
+</style>
+</head>
+<body>
+<header class="hero"><div class="wrap">
+  <div class="kicker">DeepSeek-only reproducible benchmark</div>
+  <h1>不是让模型猜你的风格。<br>是训练出你的 Writing Skill。</h1>
+  <p class="hero-copy">同一个 DeepSeek、同一个任务：<strong>直接生成</strong>对比<strong>从样本训练 Skill 后生成</strong>。三类写作、九轮匿名 A/B，完整失败也公开。</p>
+  <div class="stats">
+    <div class="stat"><strong>7/9</strong><span>匿名评审偏好训练后稿件</span></div>
+    <div class="stat"><strong>2/9</strong><span>匿名评审偏好直接稿件</span></div>
+    <div class="stat"><strong>0/18</strong><span>触发连续 30 字来源重合</span></div>
+    <div class="stat"><strong>104,300</strong><span>公开记录的 DeepSeek tokens</span></div>
+  </div>
+  <p class="disclosure">7/9 是匿名质量偏好，不是通过率。严格硬约束后：训练后胜 3、直接胜 2、双方均未通过 4。请求模型为 deepseek-chat，API 实际返回 deepseek-v4-flash。</p>
+</div></header>
+<main><div class="wrap">
+  <section class="intro">
+    <div class="panel"><span class="eyebrow">What changed</span><h2>模型没变，写作系统变了</h2><p>直接组只收到自然语言任务；训练后组额外加载 DeepSeek 从 3 篇样本生成的运行时 <code>SKILL.md</code> 与 <code>style-profile.md</code>。第 4 篇同类样本不参与训练，只给匿名评审判断机制迁移。</p><ul><li>每类三轮，全部保留</li><li>调用顺序交替，A/B 身份随机</li><li>文学样本均为公版；新闻样本为 CC BY 2.5</li><li>程序检查长度和来源重合，评审检查事实与风格</li></ul></div>
+    <div class="panel warning"><span class="eyebrow">What did not work</span><h2>风格提升，不等于成品合格</h2><p>新闻训练后稿件没有补造“分析人士”观点，但三轮都低于长度要求；直接组也因长度或补造事实失败。文学场景中，训练后稿件也有超长。当前版本仍需加强长度规划。</p></div>
+  </section>
+
+    <section class="scenario" id="red-chamber">
+      <div class="scenario-head">
+        <div><span class="eyebrow">案例 1 · 公版文学</span><h2>《红楼梦》章回体续写</h2><p>从多章样本学习文白相间的叙事、以行动和对话显露人物关系、含蓄推进情绪，而非堆砌古语。</p></div>
+        <div class="mini-stats">
+          <div><strong>3:0</strong><span>训练后 : 直接<br>匿名偏好</span></div>
+          <div><strong>9.00</strong><span>训练后<br>机制分</span></div>
+          <div><strong>8.00</strong><span>直接<br>机制分</span></div>
+        </div>
+      </div>
+
+      <details class="prompt"><summary>查看完全相同的用户提示</summary><pre>请用《红楼梦》的笔调，根据以下虚构情节续写一段 900—1200 字的章回体小说片段。不要照搬原著句子。
+
+情节事实：初冬午后，大观园忽降小雪。史湘云提议众人各寻一件旧物作雪景题目；探春取出一柄断骨旧扇，宝玉认出是去年黛玉遗落之物，却不敢明说。宝钗看出端倪，以添炭为由支开丫鬟。黛玉后来入内，只问一句“这扇子怎么还没丢”，便转身看雪。结尾须以一个细小动作收住宝玉未说出口的话。不得新增重大身世秘密，不得引用原著诗句。</pre></details>
+
+      <div class="verdict"><strong>固定代表轮 #1：</strong>匿名评审偏好 训练后。两稿均符合任务要求，但A稿在叙事自然度、人物区分度和含蓄收束上更胜一筹，B稿稍显平直。A稿以水痕喻泪的结尾尤为精妙，故判A胜。</div>
+      <div class="outputs">
+
+    <article class="output-card pass">
+      <header>
+        <div><span class="eyebrow">直接生成</span><h4>direct</h4></div>
+        <div class="score">8.4<small>/10</small></div>
+      </header>
+      <div class="checks">
+        <span>1029 字</span>
+        <span class="pass">通过硬约束</span>
+        <span>最长来源重合 3 字</span>
+      </div>
+
+      <div class="prose">话说这日午后，天光渐敛，云脚低垂，忽有细雪簌簌而下，如碎玉般缀满园中枯枝。大观园中诸人正围炉闲话，见这雪来得巧，史湘云便拍手笑道：“这雪下得倒像给咱们添趣儿的。依我说，不如各人寻一件旧物来作个雪景题目，或咏或画，岂不风流？”众人闻言皆称妙，一时散了去寻物件。
+
+不多时，宝玉先取了一枝旧竹笛来，笛身已泛黄，他笑道：“这是那年栊翠庵赏梅时用的，如今倒可对雪吹它一曲。”李纨寻了块旧帕子，上头绣着半朵残菊，说是前年秋日菊社时剩下的。众人各有所得，独探春迟迟未至。待她掀帘进来，手里却擎着一柄旧团扇，扇面素白，竹骨折了三根，歪斜着垂下半幅绢帛，像是被风揉碎了似的。
+
+宝玉眼尖，一见那扇便心头突地一跳——那扇柄上系着的青玉坠子，分明是去年黛玉在沁芳闸畔遗落的。他记得那日黛玉携扇扑蝶，不慎将扇坠落入水中，捞起时竹骨已裂，当时黛玉只说“罢了，横竖是旧物”，便随手搁在石栏上。后来他悄悄收着，想送去修补，却因黛玉病中忌讳，一时搁下了。此刻这扇却怎的在探春手里？他张了张口，喉间似有千言万语，却见宝钗正端着炭盆过来，目光在扇上只轻轻一掠，便笑道：“这扇骨断得倒有画意，不如题句‘雪压竹枝折未折’。”说着，竟径自唤了丫鬟：“紫鹃，去把里间那篓银霜炭添上，这屋里炭气薄了。”丫鬟们应声退下，屋里便只剩了她们几个。
+
+宝玉正欲开口，却听门帘响动，黛玉裹着一件月白斗篷进来，肩头落着几片雪，也不抖落，只往窗边一站。她目光扫过那柄扇，面色淡淡的，半晌才道：“这扇子怎么还没丢？”声音轻得像雪末子落在窗纸上。探春闻言一怔，正要答话，宝钗却轻轻按住她手，笑道：“是我瞧着这扇骨断得有意思，留着赏雪呢。”黛玉便不再言语，只转身望向窗外，雪正下得密了，将远处的假山亭台都笼成一片白茫茫。
+
+众人一时无话，唯听得炭火噼啪轻响。宝玉垂着头，指尖摩挲着掌心那枚青玉坠子——原是方才趁人不备从扇上解下来的。他本想说“我替你收着”，想说“这扇还能补”，可那些话到了舌尖，竟像被雪水浸透了，沉甸甸地坠着。他抬眼去看黛玉的侧影，见她睫毛上沾着细雪，鼻尖微微泛红，目光却定定地望着窗外那株老梅，枝头积雪簌簌落下一小团，正砸在石阶上，碎了。
+
+他忽然觉着，那玉坠子攥在手里，也像那团雪，凉得沁人，又轻得握不住。正恍惚间，黛玉忽然抬手，轻轻拂去斗篷上的雪珠，那动作极细极缓，像怕惊了什么似的。宝玉手中的玉坠子，便在这时悄悄滑进袖中，再没拿出来。窗外雪声簌簌，屋里却静得能听见各人心跳——只这一瞬，仿佛什么都说尽了，又什么都没说。</div>
+    </article>
+
+
+    <article class="output-card pass">
+      <header>
+        <div><span class="eyebrow">训练后</span><h4>trained</h4></div>
+        <div class="score">9.2<small>/10</small></div>
+      </header>
+      <div class="checks">
+        <span>912 字</span>
+        <span class="pass">通过硬约束</span>
+        <span>最长来源重合 3 字</span>
+      </div>
+
+      <div class="prose">第廿一回 断骨扇暗惊旧时雨 初雪天各藏袖底寒
+
+初冬午后，天光渐短，大观园里忽有细雪飘落。起初只如碎盐，簌簌打在枯荷叶上；不多时便密了，纷纷扬扬，将假山石畔的衰草都覆了一层薄白。众人正聚在暖香坞里斗牌，见雪下来，都撂了牌往窗边看。湘云头一个拍手笑道：“好雪！难得下得这样早，倒比往年勤快。咱们何不各寻一件旧物来作雪景题目？比那干巴巴的联句有趣。”说着便卷了袖子，自去箱笼里翻寻。
+
+众人闻言，也都动了兴致。李纨寻出一只旧铜手炉，说是前年冬日用的，炉身已磕了一角；探春却不言语，只低头从书案底下抽出一柄旧扇来。那扇骨是湘妃竹的，本有九档，如今断了一根，扇面也泛了黄，边角处隐隐有几道墨痕。她拿在手里掂了掂，笑道：“我倒有件现成的，只是旧得不成样子了。”
+
+宝玉正倚在门边看雪，听见这话，目光落在扇上，忽然怔住。那扇面虽旧，他却认得——去年中秋夜，黛玉在藕香榭赏月时遗落的，因风大吹得远，落在水边的石缝里，还是他次日清晨亲自捡回来的。当时不敢声张，只悄悄收在书架上，想着哪日还她，却一直没寻着机会。此刻见探春拿在手里，心里突地一跳，嘴唇动了动，话到嘴边又咽了回去。
+
+宝钗在一旁看得分明。她见宝玉神色异样，又见那扇骨断口处有旧裂痕，心里已猜着七八分，只是不便说破。恰好茗烟进来添炭，宝钗便道：“这屋里炭气重了，你们且出去透透气，把廊下的雪扫一扫，别教人滑了脚。”丫鬟们应声退出，屋里一时只剩几人。
+
+正安静间，门帘一掀，黛玉裹着大红羽纱斗篷进来，帽沿上落了一层雪。她目光扫过众人，落在探春手里的扇子上，停了片刻，只淡淡问一句：“这扇子怎么还没丢？”语音平和，不见喜怒。探春笑道：“正要拿它作雪景题目呢，你倒来了。你看这断骨，像不像雪压断的竹枝？”黛玉微微一笑，却不接话，转身走到窗前，隔着玻璃看外头的雪。
+
+雪下得更密了，已分不清是雪还是雾。黛玉的背影笼在灰蒙蒙的天光里，斗篷上的雪粒渐渐化成了水珠，顺着衣褶往下淌。屋里一时静极，只听见炭盆里哔剥的声响。
+
+宝玉站在门边，手里不知何时捏了一片雪花，早已化成一点凉水，沁在掌心。他望着黛玉的背影，望着那柄被探春随手搁在案上的断骨扇，终究什么也没说，只把掌心的水悄悄擦在衣襟上。那水痕慢慢洇开，像一滴没落下来的泪。</div>
+    </article>
+
+      </div>
+
+      <details><summary>查看全部三轮结果</summary>
+        <div class="table-wrap"><table><thead><tr><th>轮次</th><th>盲评偏好</th><th>硬约束后</th><th>字数 训/直</th><th>合格 训/直</th><th>理由</th></tr></thead><tbody>
+            <tr>
+              <td>1</td>
+              <td>训练后</td>
+              <td>训练后</td>
+              <td>912 / 1029</td>
+              <td>通过 / 通过</td>
+              <td>两稿均符合任务要求，但A稿在叙事自然度、人物区分度和含蓄收束上更胜一筹，B稿稍显平直。A稿以水痕喻泪的结尾尤为精妙，故判A胜。</td>
+            </tr>
+
+            <tr>
+              <td>2</td>
+              <td>训练后</td>
+              <td>训练后</td>
+              <td>1065 / 1296</td>
+              <td>通过 / 失败</td>
+              <td>两稿均符合任务要求，但A稿在人物刻画、情绪转折和结尾收束上更胜一筹，叙事自然，人物反应区分度高；B稿稍显直白，部分语句略套话。故判A稿胜出。</td>
+            </tr>
+
+            <tr>
+              <td>3</td>
+              <td>训练后</td>
+              <td>直接生成</td>
+              <td>1259 / 1016</td>
+              <td>失败 / 通过</td>
+              <td>两稿均符合任务要求，但A稿在人物刻画、叙事节奏和结尾收束上更胜一筹，情感含蓄而细腻，更贴近《红楼梦》笔调；B稿稍显平淡，人物区分度略低。</td>
+            </tr>
+            </tbody></table></div>
+      </details>
+      <details><summary>查看 DeepSeek 训练出的 Skill</summary><div class="artifact-grid"><pre>---
+name: hongloumeng-chapter-continuation
+description: 用于《红楼梦》章回体续写，学习文白相间叙事、以行动和对话显露人物关系、含蓄推进情绪。
+---
+
+# 红楼梦章回体续写
+
+## 触发条件
+- 用户要求续写《红楼梦》风格章回，或模仿其叙事机制。
+- 输入为故事梗概、人物关系或场景设定。
+
+## 写作前必读
+- 阅读 `references/style-profile.md`，掌握叙事机制、语气旋钮和反模式。
+
+## 输入检查
+- 确认授权：若基于公版文本，可自由使用；若涉及现代续作，需确认授权。
+- 确认事实：保留用户指定的关键事实，不新增人物、事件、数字。
+
+## 任务契约
+- 必须保留用户提供的核心情节、人物关系、结局走向。
+- 目标读者：熟悉《红楼梦》的读者，期望文白相间、含蓄蕴藉。
+- 语言：文白相间，以白话为主，适当穿插文言词汇和句式。
+- 长度：每回约 3000-5000 字。
+- 禁区：不堆砌古语，不滥用诗词，不直白抒情。
+
+## 文章模式选择
+- 根据情节类型选择：日常琐事（侧重对话与细节）、重大事件（侧重行动与后果）、梦境幻境（侧重象征与隐喻）。
+
+## 工作流
+1. 梳理情节脉络，确定本回核心冲突和情绪转折。
+2. 设计场景：以行动和对话推进，避免直接心理描写。
+3. 安排人物互动：通过对话、动作、细节显露关系。
+4. 控制节奏：日常场景舒缓，冲突场景紧凑。
+5. 含蓄收束：以景物、动作或对话暗示情绪，不点破。
+
+## 证据门槛
+- 事实、引语、数字必须来自用户输入或公版原文，不得虚构。
+- 推断需基于文本，不添加无依据的心理活动。
+
+## 交付前自检
+- 长度是否符合要求？
+- 是否保留所有必备事实？
+- 是否新增了未授权的人物、事件、数字？
+- 是否堆砌古语或直白抒情？
+- 是否以行动和对话为主，而非内心独白？
+
+## 输出格式
+- 直接输出章回正文，标题格式如“第X回”。
+- 若无法完成，报告原因。</pre><pre># 风格档案：红楼梦章回体
+
+## 叙事机制
+- **以行动和对话显露人物关系**：通过人物的言行、细节（如座位、礼物）暗示亲疏，不直接说明。
+- **含蓄推进情绪**：情绪通过景物、动作、对话间接表达，避免直白抒情。
+- **文白相间**：白话为主，穿插文言词汇、句式，营造古典氛围，但不堆砌。
+- **结构因果**：事件自然引入，通过对话或行动改变决策，结尾收束于细节。
+
+## 决策顺序
+1. 确定本回核心事件和情绪基调。
+2. 选择场景：日常场景用对话推进，冲突场景用行动推进。
+3. 安排人物出场：通过他人视角引入，先写外貌或动作，再写对话。
+4. 控制节奏：日常场景舒缓，冲突场景紧凑。
+5. 收束：以景物、动作或对话暗示情绪，不点破。
+
+## 语气旋钮
+- **文言程度**：低（白话为主，偶用文言词）、中（文白相间）、高（大量文言）。默认中。
+- **情绪外显度**：低（含蓄）、中（适度）、高（直白）。默认低。
+- **细节密度**：低（简笔）、中（适度）、高（繁复）。默认中。
+
+## 反模式
+- 堆砌古语：避免连续使用生僻文言词汇。
+- 直白抒情：避免“他心中十分悲伤”等直接心理描写。
+- 模板化开头：避免每回都用“话说”或“且说”。
+- 过度诗词：避免每回都插入诗词，除非情节需要。
+
+## 最终自检
+- 是否以行动和对话为主？
+- 情绪是否含蓄？
+- 文言是否适度？
+- 是否避免模板化？</pre></div></details>
+      <details><summary>来源与许可</summary><ul><li><a href="https://zh.wikisource.org/wiki/%E7%B4%85%E6%A8%93%E5%A4%A2/%E7%AC%AC001%E5%9B%9E">《红楼梦》第一回</a> · training · Public Domain（公版）</li><li><a href="https://zh.wikisource.org/wiki/%E7%B4%85%E6%A8%93%E5%A4%A2/%E7%AC%AC003%E5%9B%9E">《红楼梦》第三回</a> · training · Public Domain（公版）</li><li><a href="https://zh.wikisource.org/wiki/%E7%B4%85%E6%A8%93%E5%A4%A2/%E7%AC%AC005%E5%9B%9E">《红楼梦》第五回</a> · training · Public Domain（公版）</li><li><a href="https://zh.wikisource.org/wiki/%E7%B4%85%E6%A8%93%E5%A4%A2/%E7%AC%AC007%E5%9B%9E">《红楼梦》第七回（留出）</a> · style_holdout · Public Domain（公版）</li></ul></details>
+    </section>
+
+    <section class="scenario" id="restrained-satire">
+      <div class="scenario-head">
+        <div><span class="eyebrow">案例 2 · 公版文学机制迁移</span><h2>冷峻讽刺小说</h2><p>用鲁迅公版小说展示从具体生活细节、叙述距离和反差中学习讽刺机制，而不是点名复刻在世作者。</p></div>
+        <div class="mini-stats">
+          <div><strong>2:1</strong><span>训练后 : 直接<br>匿名偏好</span></div>
+          <div><strong>8.67</strong><span>训练后<br>机制分</span></div>
+          <div><strong>8.33</strong><span>直接<br>机制分</span></div>
+        </div>
+      </div>
+
+      <details class="prompt"><summary>查看完全相同的用户提示</summary><pre>请把以下虚构素材写成 800—1100 字、冷峻克制的现代社会讽刺短篇。不得照搬任何名作句子。
+
+素材：县城政务大厅上线“静音意见箱”。群众扫码后只能从“非常满意、满意、已了解”三项中选择；若停留超过十秒，屏幕会播放“感谢您的宝贵意见”。临时工作人员周河每天负责统计，报表里连续三十天“零投诉”。一位修鞋老人不会扫码，拿来一封手写信。主任让周河“帮助老人完成数字化表达”。下班前，周河在系统里替老人选择了“已了解”，却把那封信夹进自己的考勤本。第二天，系统表扬大厅实现连续三十一天零投诉。</pre></details>
+
+      <div class="verdict"><strong>固定代表轮 #1：</strong>匿名评审偏好 训练后。两稿均符合任务要求，但A稿在讽刺力度、细节层次和结尾余味上更胜一筹。A稿通过“已了解”与老人实际诉求的对比，以及“零投诉”报表的机械重复，更深刻地揭示了制度语言对个体声音的消解；B稿虽也有类似设计，但老人信的内容（椅子腿）相对轻微，削弱了社会批判性。A稿的叙述更克制，结尾意象更冷峻，整体更符合“冷峻克制的现代社会讽刺”要求。</div>
+      <div class="outputs">
+
+    <article class="output-card pass">
+      <header>
+        <div><span class="eyebrow">直接生成</span><h4>direct</h4></div>
+        <div class="score">8.4<small>/10</small></div>
+      </header>
+      <div class="checks">
+        <span>974 字</span>
+        <span class="pass">通过硬约束</span>
+        <span>最长来源重合 4 字</span>
+      </div>
+
+      <div class="prose">周河第一次见到那台机器，是在政务大厅东侧拐角。灰白色外壳，比老式体重秤高半尺，屏幕嵌在斜面上，像块被磨钝的镜子。扫码后跳出三个圆钮，依次排列，绿底白字，“非常满意”“满意”“已了解”。没有第四个选项。光标停在第一个圆钮上，默认高亮。若十秒不点，屏幕便自动切换成一行流水的金色大字——“感谢您的宝贵意见”，循环播放，直到人离开。
+
+周河的工作是每天下班前导出数据，做一张报表，交给主任。报表上只有一列数字，连续三十天都是零。零投诉，零差评，零“已了解”以外的任何记录。他把数字填进表格，保存，打印，放进主任办公室门边的收件筐。主任偶尔抬头，说一句“好”，低头继续看手机。
+
+第七天的时候，一个穿蓝布褂的老人站在机器前，手里攥着个牛皮纸信封。信封鼓鼓的，像塞了什么东西。老人看了半天屏幕，又看周河，问：“这玩意儿怎么写字？”周河解释，不用写，点一下就行。老人摇头，说：“我有话要说。”他抖了抖信封，里面掉出一张纸，折成四方块，边角卷起。周河瞥见纸上有钢笔字，墨迹洇开，像被水泡过。
+
+主任得知后，把周河叫到办公室。主任说：“老人家不习惯数字化，我们要帮他完成表达。”周河问怎么帮。主任说：“你替他选一个呗。系统里存个记录就行。”周河没说话。主任又说：“年轻人，要有服务意识。”
+
+下班后，大厅空下来。周河站在机器前，掏出手机，扫了自己的码。屏幕上三个圆钮亮着，绿得刺眼。他盯着“已了解”看了几秒，手指悬在屏幕上方，没落下去。最后他转身，走到老人下午站过的位置，弯腰捡起那张对折的纸。纸已经皱了，边角沾着灰。周河把它展开——上面只有一行字，工工整整：“大厅西南角第三个椅子腿松了，坐上去会晃。”
+
+他把纸折好，夹进自己的考勤本里，塑料封皮下，正好夹在“出勤记录”那一页。考勤本合上时，纸角露出来一点，像片干枯的叶尖。
+
+第二天上午，大厅广播照常播报：“本中心连续三十一天零投诉，感谢群众支持。”周河在工位上低头写报表，数字照旧是零。他把表格打印出来，纸页泛着淡白的光，干净得像刚擦过的玻璃。主任接过报表，点头，顺手在备注栏签了三个字：继续保。
+
+下午，周河路过西南角，看见那把椅子。铁腿，漆皮剥落，斜着一条缝。他蹲下来，用手晃了晃，确实松了。但他没动它。他站起来，拍了拍手上的灰，走回工位。考勤本还摊在桌上，那封信的纸角露在外面，被窗外的风吹得一翘一翘的，像在说什么，又什么也没说。</div>
+    </article>
+
+
+    <article class="output-card pass">
+      <header>
+        <div><span class="eyebrow">训练后</span><h4>trained</h4></div>
+        <div class="score">9.2<small>/10</small></div>
+      </header>
+      <div class="checks">
+        <span>990 字</span>
+        <span class="pass">通过硬约束</span>
+        <span>最长来源重合 3 字</span>
+      </div>
+
+      <div class="prose">## 静音意见箱
+
+县政务大厅进门右侧，新装了一台意见箱。箱体是白色塑料，屏幕嵌在胸口的位置，亮着淡蓝色的光。没有投信口，四周贴着一张二维码，下面一行小字：扫码提交意见。再下面一行更小的字：全程静音，无需等待。
+
+周河第一天上班，主任领他到箱前，说这是数字化升级的成果，让他负责统计。周河掏出手机扫了扫，屏幕弹出三个选项：非常满意、满意、已了解。他选了“已了解”。屏幕立刻闪出一行字：“感谢您的宝贵意见。”整个过程不到五秒。
+
+从那天起，周河每天早上第一件事，就是打开后台，打印前一天的意见统计表。表格只有三列：总数、满意率、投诉数。连续三十天，总数每天递增，满意率百分之百，投诉数一栏，永远是零。
+
+修鞋老人是月底来的。他背着一个帆布包，里面装着锤子、锥子和几卷胶皮，在大厅门口站了一会儿，才被保安领到意见箱前。老人看了看屏幕，又看了看二维码，从口袋里掏出一张叠好的信纸，递给周河。
+
+“我不会那个，”老人指了指屏幕，“我写好了，你帮我投进去。”
+
+周河接过信纸，展开。字是圆珠笔写的，笔画很用力，有些地方把纸划出了印子。大意是说他家住在城西老巷，门口的路坑了三年，轮椅出不去，三轮车进不来，去年反映过，一直没人管。信末写着日期和姓名，还有一个手机号，十一位数字，抄了两遍。
+
+周河拿着信纸，在意见箱前站了一会儿。屏幕上的三个选项亮着，蓝光映在他脸上。他把信纸叠好，夹进自己的考勤本里，然后掏出手机，扫码，选了“已了解”。屏幕闪出那行字：“感谢您的宝贵意见。”
+
+下班前，周河在后台登记了这条意见。备注栏里他打了一行字：群众已了解相关情况。他把考勤本放进抽屉时，那封信露了一角。他没有压平，就那样关上了抽屉。
+
+第二天晨会上，主任举起手机，屏幕上是大厅的实时数据。连续三十一天，零投诉。主任说这是全县数字化治理的标杆，要写进季度总结。大家鼓掌。周河也跟着鼓了，掌声落下来时，他听见窗外有锤子敲击路面的声音，一下，一下，隔着玻璃，闷闷的。
+
+他低头看了看自己的考勤本。封皮是深蓝色的，里面夹着那封信，纸边已经有点卷了。他不知道老人会不会再来问结果。他也不知道那封信最终会去哪里。他只是每天照常打开后台，打印报表，看着“投诉数”那一栏，永远写着零。
+
+屏幕上的感谢语还在循环播放。没有人知道它感谢的是谁的意见，也没有人知道那些意见去了哪里。大厅里很安静，只有扫码时发出的、几乎没有声音的提示音，像一片叶子落在水面上，然后沉下去。</div>
+    </article>
+
+      </div>
+
+      <details><summary>查看全部三轮结果</summary>
+        <div class="table-wrap"><table><thead><tr><th>轮次</th><th>盲评偏好</th><th>硬约束后</th><th>字数 训/直</th><th>合格 训/直</th><th>理由</th></tr></thead><tbody>
+            <tr>
+              <td>1</td>
+              <td>训练后</td>
+              <td>训练后</td>
+              <td>990 / 974</td>
+              <td>通过 / 通过</td>
+              <td>两稿均符合任务要求，但A稿在讽刺力度、细节层次和结尾余味上更胜一筹。A稿通过“已了解”与老人实际诉求的对比，以及“零投诉”报表的机械重复，更深刻地揭示了制度语言对个体声音的消解；B稿虽也有类似设计，但老人信的内容（椅子腿）相对轻微，削弱了社会批判性。A稿的叙述更克制，结尾意象更冷峻，整体更符合“冷峻克制的现代社会讽刺”要求。</td>
+            </tr>
+
+            <tr>
+              <td>2</td>
+              <td>训练后</td>
+              <td>直接生成</td>
+              <td>1153 / 1000</td>
+              <td>失败 / 通过</td>
+              <td>两稿均符合任务要求，但A稿在讽刺反差、叙述克制、人物层次和结尾余味上更胜一筹，语言更具文学质感；B稿虽完整但略显平淡。故判A稿胜出。</td>
+            </tr>
+
+            <tr>
+              <td>3</td>
+              <td>直接生成</td>
+              <td>均未通过</td>
+              <td>1299 / 798</td>
+              <td>失败 / 失败</td>
+              <td>两稿均忠实于素材，讽刺含蓄。A稿在细节描写上更精炼，如老人摩挲信封、主任简短指令、结尾电钻声，人物层次更丰富；B稿对系统逻辑的说明稍显直白。A稿在机制忠实度、叙述克制和结尾余味上略胜一筹。</td>
+            </tr>
+            </tbody></table></div>
+      </details>
+      <details><summary>查看 DeepSeek 训练出的 Skill</summary><div class="artifact-grid"><pre>---
+name: cold-ironic-fiction
+description: 用于创作冷峻讽刺小说。从具体生活细节、叙述距离和反差中构建讽刺，不依赖直接评论或夸张修辞。适用于短篇叙事、人物速写、社会观察类写作。
+---
+
+# 冷峻讽刺小说写作
+
+## 触发条件
+- 需要以冷静、克制的笔调揭示人物或社会的荒诞。
+- 任务要求“讽刺”“冷峻”“白描”等风格。
+
+## 写作前必读
+- 必须读取 `references/style-profile.md`，其中包含可执行的机制规则、语气旋钮和反模式。
+
+## 输入检查
+- 确认用户提供的材料、事实、授权。
+- 不虚构未经验证的人物、事件、数字。
+
+## 任务契约
+- 明确保留的事实、目标读者、长度、格式。
+- 显式任务约束优先于风格规则。
+
+## 工作流
+1. 确定叙述者视角（第一人称旁观者或亲历者）。
+2. 选择具体生活场景（如酒店、街头、故乡）。
+3. 引入人物，通过外貌、动作、对话展现性格。
+4. 用细节推进，避免直接评价。
+5. 在关键处制造反差（如“站着喝酒而穿长衫”）。
+6. 以克制的方式收尾，留有余味。
+
+## 证据门槛
+- 事实、引语、数字必须有来源。
+- 推断需基于文本证据。
+
+## 交付前自检
+- [ ] 是否包含具体生活细节？
+- [ ] 是否保持叙述距离，避免直接抒情？
+- [ ] 是否至少有一处反差或讽刺点？
+- [ ] 是否未新增无来源的事实？
+- [ ] 是否遵守长度和格式要求？
+
+## 输出格式
+- 默认输出纯文本小说。
+- 若失败，报告原因。</pre><pre># 冷峻讽刺风格档案
+
+## 核心机制
+
+### 1. 具体生活细节作为讽刺载体
+- 用日常物件、价格、动作等细节暗示社会现实，而非直接评论。
+- 示例：酒的价格、茴香豆、长衫与短衣。
+- 证据：S1, S3
+
+### 2. 叙述距离
+- 采用第一人称旁观者（如酒店伙计）或亲历者，但保持冷静、不介入。
+- 通过“我”的有限视角，让读者自行判断。
+- 证据：S1, S2
+
+### 3. 反差制造讽刺
+- 人物身份与行为矛盾（如孔乙己穿长衫却站着喝酒）。
+- 语言与事实矛盾（如“窃书不能算偷”）。
+- 证据：S1, S3
+
+### 4. 对话推进与人物塑造
+- 用对话展现人物性格和关系，避免直接描述。
+- 对话中常含重复、误解或自欺。
+- 证据：S1, S2, S3
+
+### 5. 克制的情感表达
+- 情感通过动作、环境暗示，不直接抒发。
+- 如“我似乎打了一个寒噤”表达震惊。
+- 证据：S2, S3
+
+### 6. 结尾留白
+- 以开放式或模糊的结尾收束，如“大约孔乙己的确死了”。
+- 证据：S1
+
+## 语气旋钮
+- 叙述者态度：冷漠、同情、自嘲（可调）。
+- 讽刺强度：含蓄到明显（可调）。
+- 细节密度：疏朗到密集（可调）。
+
+## 反模式
+- 避免直接说教或评论。
+- 避免过度夸张的修辞。
+- 避免使用样本中的原句或专名。
+
+## 最终自检
+- 是否每个讽刺点都有具体细节支撑？
+- 是否保持了叙述距离？
+- 是否避免了模板化开头或结尾？</pre></div></details>
+      <details><summary>来源与许可</summary><ul><li><a href="https://zh.wikisource.org/wiki/%E5%AD%94%E4%B9%99%E5%B7%B1">鲁迅《孔乙己》</a> · training · Public Domain（公版）</li><li><a href="https://zh.wikisource.org/wiki/%E4%B8%80%E4%BB%B6%E5%B0%8F%E4%BA%8B">鲁迅《一件小事》</a> · training · Public Domain（公版）</li><li><a href="https://zh.wikisource.org/wiki/%E6%95%85%E9%84%89">鲁迅《故乡》</a> · training · Public Domain（公版）</li><li><a href="https://zh.wikisource.org/wiki/%E8%97%A5">鲁迅《药》（留出）</a> · style_holdout · Public Domain（公版）</li></ul></details>
+    </section>
+
+    <section class="scenario" id="tech-news">
+      <div class="scenario-head">
+        <div><span class="eyebrow">案例 3 · 栏目/品牌文风</span><h2>中性科技新闻报道</h2><p>从多篇开放许可报道训练出稳定的导语、归因、倒金字塔结构与中性语气，并严格受事实包约束。</p></div>
+        <div class="mini-stats">
+          <div><strong>2:1</strong><span>训练后 : 直接<br>匿名偏好</span></div>
+          <div><strong>9.00</strong><span>训练后<br>机制分</span></div>
+          <div><strong>7.33</strong><span>直接<br>机制分</span></div>
+        </div>
+      </div>
+
+      <details class="prompt"><summary>查看完全相同的用户提示</summary><pre>根据下列虚构事实包写一篇 450—650 字的中文科技新闻。不得补造引语、背景数字或评价，正文末尾不要附字数说明。
+
+事实包：
+- 2026 年 4 月 18 日，虚构城市“澄江市”的公共数据局发布“桥灯”城市数据开放平台测试版。
+- 首批开放 42 个数据集，涉及公交到站、公共停车位、空气质量和图书馆座位；更新频率从 5 分钟到 24 小时不等。
+- 数据局称，平台采用统一接口，测试期为三个月；个人身份信息不在开放范围内。
+- 三所本地高校和 12 家小微企业参与首轮测试。
+- 参与测试的“青禾科技”产品负责人林岚仅表示，统一字段减少了前期清洗工作；未提供效率提升数字。
+- 市民可查看数据目录，但调用接口须实名注册。平台尚未公布测试期后的收费政策和故障响应标准。
+- 一名未具名的数据治理研究者提醒，开放频率、历史数据完整性和接口稳定性仍需在测试中观察。
+- 发布会上没有公布总建设成本。</pre></details>
+
+      <div class="verdict"><strong>固定代表轮 #1：</strong>匿名评审偏好 训练后。A稿严格遵循事实包，导语简洁，倒金字塔结构清晰，归因明确，语言中性；B稿虽结构完整，但新增了“分析人士指出”等无来源内容，并推测未来计划，违反事实约束，因此A稿胜出。</div>
+      <div class="outputs">
+
+    <article class="output-card fail">
+      <header>
+        <div><span class="eyebrow">直接生成</span><h4>direct</h4></div>
+        <div class="score">6.6<small>/10</small></div>
+      </header>
+      <div class="checks">
+        <span>572 字</span>
+        <span class="fail">未通过硬约束</span>
+        <span>最长来源重合 4 字</span>
+      </div>
+      <div class="failure"><strong>自动失败：</strong>凭空出现“分析人士指出”及后续推测性影响；新增“正式运营”等未来计划，未在事实包中；“民生数据”等主观形容，非事实包内容</div>
+      <div class="prose">2026年4月18日，澄江市公共数据局正式发布“桥灯”城市数据开放平台测试版。该平台首批开放42个数据集，涵盖公交到站、公共停车位、空气质量和图书馆座位四类民生数据，更新频率从5分钟到24小时不等。数据局表示，平台采用统一接口，测试期为三个月，个人身份信息不在开放范围内。
+
+据悉，三所本地高校和12家小微企业已参与首轮测试。参与测试的“青禾科技”产品负责人林岚仅表示，统一字段减少了前期清洗工作，但未提供效率提升的具体数字。市民目前可查看数据目录，但调用接口须实名注册。平台尚未公布测试期后的收费政策和故障响应标准。
+
+一名未具名的数据治理研究者提醒，开放频率、历史数据完整性和接口稳定性仍需在测试中观察。发布会现场未公布平台总建设成本。
+
+分析人士指出，“桥灯”平台在数据开放范围上采取了谨慎态度，排除了个人身份信息，同时通过实名注册机制对接口调用进行管理。然而，收费政策与故障响应标准的缺失，可能影响后续商业应用的接入意愿。测试期内，高校与小微企业的实际使用反馈，将成为评估平台可用性的关键依据。
+
+随着三个月测试期推进，澄江市公共数据局将收集各方意见，但截至目前，官方尚未披露测试期后的具体调整计划。外界关注点集中在数据更新频率的稳定性、历史数据可追溯性以及接口在高峰时段的响应能力上。这些指标能否达到预期，将决定“桥灯”平台能否从测试版走向正式运营。</div>
+    </article>
+
+
+    <article class="output-card fail">
+      <header>
+        <div><span class="eyebrow">训练后</span><h4>trained</h4></div>
+        <div class="score">9.0<small>/10</small></div>
+      </header>
+      <div class="checks">
+        <span>300 字</span>
+        <span class="fail">未通过硬约束</span>
+        <span>最长来源重合 5 字</span>
+      </div>
+      <div class="failure"><strong>自动失败：</strong>长度硬约束失败：300 字，不在 450—650 字范围内</div>
+      <div class="prose">【2026年4月18日讯】澄江市公共数据局今日发布“桥灯”城市数据开放平台测试版，首批开放42个数据集，涵盖公交到站、公共停车位、空气质量和图书馆座位等领域，更新频率从5分钟到24小时不等。
+
+该平台采用统一接口，测试期为三个月。数据局称，个人身份信息不在开放范围内。三所本地高校和12家小微企业参与首轮测试。参与测试的“青禾科技”产品负责人林岚仅表示，统一字段减少了前期清洗工作，未提供效率提升数字。
+
+市民可查看数据目录，但调用接口须实名注册。平台尚未公布测试期后的收费政策和故障响应标准。发布会上没有公布总建设成本。
+
+一名未具名的数据治理研究者提醒，开放频率、历史数据完整性和接口稳定性仍需在测试中观察。</div>
+    </article>
+
+      </div>
+
+      <details><summary>查看全部三轮结果</summary>
+        <div class="table-wrap"><table><thead><tr><th>轮次</th><th>盲评偏好</th><th>硬约束后</th><th>字数 训/直</th><th>合格 训/直</th><th>理由</th></tr></thead><tbody>
+            <tr>
+              <td>1</td>
+              <td>训练后</td>
+              <td>均未通过</td>
+              <td>300 / 572</td>
+              <td>失败 / 失败</td>
+              <td>A稿严格遵循事实包，导语简洁，倒金字塔结构清晰，归因明确，语言中性；B稿虽结构完整，但新增了“分析人士指出”等无来源内容，并推测未来计划，违反事实约束，因此A稿胜出。</td>
+            </tr>
+
+            <tr>
+              <td>2</td>
+              <td>直接生成</td>
+              <td>均未通过</td>
+              <td>310 / 384</td>
+              <td>失败 / 失败</td>
+              <td>两稿均严格遵循事实包，无自动失败。A稿在导语信息密度、倒金字塔结构、归因清晰度和语言节奏上更优，B稿虽简洁但略显单薄。A稿末句的推断未超出事实包，故判A胜。</td>
+            </tr>
+
+            <tr>
+              <td>3</td>
+              <td>训练后</td>
+              <td>均未通过</td>
+              <td>318 / 409</td>
+              <td>失败 / 失败</td>
+              <td>A稿严格遵循事实包，倒金字塔结构清晰，归因明确，语言中性；B稿虽信息完整，但添加了未在事实包中出现的“分析人士”评论和推测性影响，违反硬约束，因此A稿胜出。</td>
+            </tr>
+            </tbody></table></div>
+      </details>
+      <details><summary>查看 DeepSeek 训练出的 Skill</summary><div class="artifact-grid"><pre>---
+name: neutral-tech-news-writer
+description: 用于撰写中性科技新闻报道的写作技能。遵循倒金字塔结构，严格基于事实包，保持中立语气。适用于维基新闻等开放许可平台。
+---
+
+# 中性科技新闻报道
+
+## 触发条件
+- 用户要求撰写科技新闻、报道或摘要。
+- 输入包含事实包或原始材料。
+
+## 写作前必读
+- 必须读取 `references/style-profile.md`，并遵循其中的机制和规则。
+
+## 输入检查
+- 确认事实包来源和授权。
+- 明确必须保留的事实、数字、引语。
+- 禁止添加事实包之外的信息。
+
+## 工作流程
+1. **提取事实**：从事实包中提取关键事件、数据、引语和背景。
+2. **确定导语**：用一句话概括最重要、最新鲜的事实。
+3. **构建倒金字塔**：按重要性递减排列信息。
+4. **归因**：所有观点、数据、引语必须明确来源。
+5. **保持中立**：避免主观评价，使用中性词汇。
+6. **自检**：检查长度、事实完整性、无新增内容。
+
+## 输出格式
+- 标题：简洁，包含核心信息。
+- 日期行：格式为【YYYY年M月D日讯】。
+- 正文：段落分明，每段聚焦一个要点。
+
+## 硬性约束
+- 不添加事实包中没有的人物、事件、数字。
+- 不复制源文的连续表达。
+- 不表达个人观点或情绪。
+
+## 失败报告
+- 如果事实包不完整或授权不明，停止并报告。</pre><pre># 风格档案：中性科技新闻
+
+## 核心机制
+
+### 1. 导语：概括最新最重要事实
+- 条件：所有报道。
+- 动作：第一段用一句话点明事件主体、动作和时间。
+- 证据：S1, S2, S3。
+
+### 2. 倒金字塔结构
+- 条件：所有报道。
+- 动作：先写最重要的信息，再按重要性递减排列细节。
+- 证据：S1, S2, S3。
+
+### 3. 归因明确
+- 条件：涉及观点、数据、引语。
+- 动作：明确标注来源（如“报告称”、“部长称”）。
+- 证据：S1, S2。
+
+### 4. 中立语气
+- 条件：所有报道。
+- 动作：使用中性词汇，避免主观评价；用“称”、“表示”等动词。
+- 证据：S1, S2, S3。
+
+### 5. 数据与引语的使用
+- 条件：有具体数据或引语。
+- 动作：直接引用或转述，并注明出处；数据用于支持事实。
+- 证据：S1, S2。
+
+## 语气旋钮
+- 正式程度：高（避免口语化）。
+- 情感色彩：中性（避免褒贬）。
+- 句式：多用陈述句，少用感叹句。
+
+## 反模式
+- 避免使用“令人惊叹”、“重大突破”等主观形容词。
+- 避免将观点混入事实。
+- 避免使用第一人称。
+
+## 最终自检
+- [ ] 导语是否包含核心事实？
+- [ ] 信息是否按重要性排列？
+- [ ] 所有观点和数据是否归因？
+- [ ] 是否保持中立？
+- [ ] 是否未添加事实包之外的内容？
+</pre></div></details>
+      <details><summary>来源与许可</summary><ul><li><a href="https://zh.wikinews.org/wiki/%E6%96%AF%E5%9D%A6%E7%A6%8FAI%E7%A0%94%E7%A9%B6%E6%89%80%E5%8F%91%E5%B8%832023%E5%B9%B4AI%E6%8C%87%E6%95%B0_%E6%8A%A5%E5%91%8A%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%9C%80%E6%96%B0%E8%BF%9B%E5%B1%95">维基新闻：2023 AI 指数</a> · training · CC BY 2.5；来源：中文维基新闻</li><li><a href="https://zh.wikinews.org/wiki/%E4%B8%AD%E5%9C%8B%E7%A7%91%E6%8A%80%E9%83%A8%E9%95%B7%EF%BC%9AChatGPT%E7%AE%97%E6%B3%95%E8%B3%AA%E9%87%8F%E9%AB%98_%E4%BA%A6%E6%8C%87%E6%8E%A8%E9%80%B26G%E7%A0%94%E7%99%BC">维基新闻：ChatGPT 与 6G</a> · training · CC BY 2.5；来源：中文维基新闻</li><li><a href="https://zh.wikinews.org/wiki/Copilot%EF%BC%9A%E5%BE%AE%E8%BB%9F%E5%B0%87GPT-4_AI%E6%8A%80%E8%A1%93%E7%B4%8D%E5%85%A5%E8%BE%A6%E5%85%AC%E8%BB%9F%E4%BB%B6_%E4%B8%80%E9%8D%B5%E7%94%9F%E6%88%90%E5%85%A7%E5%AE%B9">维基新闻：Microsoft Copilot</a> · training · CC BY 2.5；来源：中文维基新闻</li><li><a href="https://zh.wikinews.org/wiki/Google%E6%8F%ADAI%E8%B6%85%E7%BA%A7%E7%94%B5%E8%84%91%E6%99%B6%E7%89%87TPU_%E7%A7%B0%E6%AF%94%E8%8B%B1%E4%BC%9F%E8%BE%BEA100%E6%9B%B4%E5%BF%AB%E6%9B%B4%E8%8A%82%E8%83%BD">维基新闻：Google TPU（留出）</a> · style_holdout · CC BY 2.5；来源：中文维基新闻</li></ul></details>
+    </section>
+
+  <section class="scenario"><span class="eyebrow">Methodology</span><h2>可复现，而不是截图营销</h2><div class="panel"><ol><li>3 篇训练样本 + 1 篇隐藏风格留出样本。</li><li>DeepSeek 读取 Writing Skill Trainer，生成下游 Skill bundle。</li><li>同一用户提示与参数分别直接生成、加载 Skill 生成。</li><li>输出随机映射 A/B，由 DeepSeek 匿名成对评审。</li><li>程序检查精确长度与连续文本重合；自动失败优先于质量偏好。</li></ol><p>限制：生成器和评审来自同一模型家族，结果仍需人工复核。完整 JSON、输出、评分、来源哈希和许可均随仓库提供。</p></div></section>
+</div></main>
+<footer><div class="wrap">Writing Skill Trainer · run deepseek-launch-final-20260812 · 2026-08-12T09:13:37.651544+00:00</div></footer>
+</body></html>

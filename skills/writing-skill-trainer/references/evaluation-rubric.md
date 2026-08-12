@@ -8,6 +8,7 @@
 - [4. 测试提示模板](#4-测试提示模板)
 - [5. 进化日志](#5-进化日志)
 - [6. 评估报告模板](#6-评估报告模板)
+- [7. 裁判审计日志](#7-裁判审计日志)
 
 ## 1. 自动失败项
 
@@ -41,7 +42,7 @@
 
 `总分 = Σ（维度得分 ÷ 10 × 权重）`
 
-默认门槛：无自动失败项、总分 ≥85；跨文章验证时，“泛化与表层自由度”不得低于 7/10；单篇只能标记 `provisional`，不能因为高分宣称泛化。
+默认门槛：无自动失败项、总分 ≥85；跨文章验证时，“泛化与表层自由度”不得低于 7/10；单篇只能标记 `provisional`，不能因为高分宣称泛化。门槛只用于最终通过判定；每轮 keep/revert 用 §3.5 的成对比较裁决，不比较绝对分数。
 
 ## 3. 评分解释
 
@@ -67,9 +68,13 @@
 2. 最低分维度和造成失分的一个原因；
 3. 下一轮只应改变哪一条规则。
 
-### 3.5 baseline 与 candidate
+### 3.5 评分卡诊断，成对比较裁决
 
-候选稿不必在每一项都高于 baseline；必须看总分、最低维度和留出集。若 candidate 在源文上提高、在留出集下降，判定为过拟合，拒绝该修改。
+单次 LLM 绝对打分噪声通常在 ±1 分以上，1—2 分的总分差异大概率是噪声。因此：
+
+- 评分卡只用于**诊断**：定位最低分维度，决定下一轮改什么；
+- keep/revert 用**盲评成对比较**裁决：评审接收源文、用户任务和两份匿名稿件（不知道哪份是新版本），回答哪份更好完成任务、是否保留机制与声音、是否引入模板化/虚构/版权风险；
+- 候选稿不必在每一项都高于 baseline；若在源文上胜出、在留出集下降，判定为过拟合，拒绝该修改。
 
 ## 4. 测试提示模板
 
@@ -90,7 +95,7 @@
     "source": "sample-b.md",
     "prompt": "将同一写作机制用于不同题型，允许改变开头、结构和结尾形式。",
     "expected": "迁移底层机制，不强行复制源文表层模板。",
-    "type": "cross-type",
+    "type": "transfer",
     "holdout": true
   }
 ]
@@ -100,13 +105,13 @@
 
 ## 5. 进化日志
 
-`results.tsv` 可使用以下表头：
+`reports/results.tsv` 可使用以下表头：
 
 ```tsv
-timestamp	run_id	version	prompt_id	old_score	new_score	lowest_dimension	status	eval_mode	note
+timestamp	run_id	version	prompt_id	pairwise_result	lowest_dimension	prediction_hit	status	eval_mode	note
 ```
 
-`status` 使用 `baseline`、`keep`、`revert`、`blocked`；`eval_mode` 使用 `full_test` 或 `dry_run`。分数保留一位小数，只有严格提升且留出集没有明显退化才写 `keep`。
+`status` 使用 `baseline`、`keep`、`revert`、`blocked`；`eval_mode` 使用 `full_test` 或 `dry_run`；`pairwise_result` 使用 `win`、`lose`、`tie`；`prediction_hit` 使用 `yes`、`no`（预期改善的维度是否真的改善）。只有盲评胜出且留出集没有明显退化才写 `keep`。
 
 每轮改动记录格式：
 
@@ -114,9 +119,11 @@ timestamp	run_id	version	prompt_id	old_score	new_score	lowest_dimension	status	e
 假设：把规则 R-STRUCT-02 改为条件规则，能减少家庭故事的模板化。
 证据：sample-a 第3段、sample-c 结尾；sample-b 没有该特征。
 变更：只调整题型路由，不新增固定小标题。
-预期：跨题型维度 +1，源文声音不下降。
-结果：总分 82.0 → 86.5；holdout 7.4 → 7.6；决定 keep。
+预期：泛化维度改善，源文声音不下降。
+结果：盲评 candidate 胜出（2/3 提示）；holdout 未退化；预测命中；决定 keep。
 ```
+
+连续两轮 `prediction_hit: no` 时触发预测校准停机（见 SKILL.md §9.1）：停止爬山，回到证据提炼阶段重新诊断。
 
 ## 6. 评估报告模板
 
@@ -145,5 +152,28 @@ timestamp	run_id	version	prompt_id	old_score	new_score	lowest_dimension	status	e
 - 模板坍缩检查：
 - 版权、事实、授权阻断：
 - 是否可称为泛化：
+- 压力测试结果与遗留风险：
 - 下一步：
 ```
+
+## 7. 裁判审计日志
+
+rubric 在单个 run 内冻结；本节格式用于 run 之间的外环审计（见 SKILL.md §9.3）。
+
+发现"评分结论与用户实际判断相悖"的案例时，追加一行到 `reports/rubric-audit.md`：
+
+```text
+案例：candidate v3 总分 88 通过，用户判断"模板感重、不像作者"。
+指向缺陷：泛化与表层自由度维度未捕捉到小标题句式趋同。
+状态：待累积（1/2）。
+```
+
+同一缺陷累积 2 个以上案例后，才允许在下一个 run 开始前修改一次 rubric；修改记录追加：
+
+```text
+变更：泛化维度评分问题中加入"连续小节句式是否趋同"检查项。
+依据：案例 #1、#3。
+版本：rubric v2（v1 保留于 git 历史或备份）。
+```
+
+进化循环进行中不得修改 rubric。

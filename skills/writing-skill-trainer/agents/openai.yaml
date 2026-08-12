@@ -1,0 +1,4 @@
+interface:
+  display_name: "Writing Skill Trainer"
+  short_description: "Learn from your writing and train your own Writing Skill"
+  default_prompt: "Learn from my writing samples, then train and validate my own reusable Writing Skill without copying distinctive wording."
