@@ -11,7 +11,7 @@ import time
 import urllib.error
 import urllib.parse
 import urllib.request
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from html.parser import HTMLParser
 from pathlib import Path
 
@@ -322,7 +322,7 @@ def main() -> None:
     ]
     payload = {
         "schema_version": 1,
-        "retrieved_at": datetime.now(UTC).isoformat(),
+        "retrieved_at": datetime.now(timezone.utc).isoformat(),
         "methodology": {
             "training_sources_per_scenario": 3,
             "style_holdouts_per_scenario": 1,

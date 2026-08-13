@@ -14,7 +14,7 @@ import time
 import unicodedata
 import urllib.error
 import urllib.request
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from statistics import mean
 from typing import Any
@@ -420,7 +420,7 @@ def main() -> None:
     parser.add_argument("--model", default="deepseek-chat")
     parser.add_argument("--repetitions", type=int, default=3)
     parser.add_argument("--only", action="append", help="Run only this scenario id; repeatable")
-    parser.add_argument("--run-id", default=datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ"))
+    parser.add_argument("--run-id", default=datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ"))
     parser.add_argument("--env-file", type=Path, default=REPO_ROOT / ".env.local")
     args = parser.parse_args()
     if args.repetitions < 1:
@@ -645,7 +645,7 @@ def main() -> None:
     result = {
         "schema_version": 1,
         "run_id": args.run_id,
-        "completed_at": datetime.now(UTC).isoformat(),
+        "completed_at": datetime.now(timezone.utc).isoformat(),
         "generator": "DeepSeek API only for training, direct generation, trained generation, and judging",
         "requested_model": args.model,
         "trainer_skill_sha256": sha256_text(trainer_skill),

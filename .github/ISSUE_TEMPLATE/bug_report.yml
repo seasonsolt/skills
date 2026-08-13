@@ -1,0 +1,45 @@
+name: Bug report
+description: 报告可复现的 skill、脚本或文档问题
+title: "[Bug] "
+body:
+  - type: input
+    id: skill
+    attributes:
+      label: 影响范围
+      description: Skill 名称、脚本路径，或 repository/docs。
+      placeholder: skills/write-daily-report
+    validations:
+      required: true
+  - type: textarea
+    id: behavior
+    attributes:
+      label: 实际行为与预期行为
+      description: 简洁说明发生了什么，以及你期望什么。
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: 最小复现
+      description: 提供脱敏后的输入、命令和步骤。
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: 环境与验证证据
+      description: 操作系统、Codex 表面、commit、依赖版本、错误输出或失败测试。请脱敏。
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: 提交确认
+      options:
+        - label: 我已搜索现有 issue，并在当前默认分支或所填 commit 上复现。
+          required: true
+        - label: 我没有提交密钥、Cookie、token、私有会话、客户数据或未公开草稿。
+          required: true
+        - label: 这不是安全漏洞；安全问题将按 SECURITY.md 私下报告。
+          required: true

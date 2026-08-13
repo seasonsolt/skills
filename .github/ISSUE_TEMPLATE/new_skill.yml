@@ -1,0 +1,48 @@
+name: New skill proposal
+description: 提议一个有明确边界和验证方法的新 skill
+title: "[Skill] "
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: 要解决的重复工作
+      description: 谁在什么情境下反复遇到什么问题？现有 skill 为什么不够？
+    validations:
+      required: true
+  - type: textarea
+    id: contract
+    attributes:
+      label: 触发、非触发与输出
+      description: 给出典型触发请求、不应触发的请求，以及最小交付物。
+    validations:
+      required: true
+  - type: textarea
+    id: boundaries
+    attributes:
+      label: 依赖与信任边界
+      description: 说明工具、平台、凭据、网络、写入范围、破坏性动作和人工确认点。
+    validations:
+      required: true
+  - type: textarea
+    id: verification
+    attributes:
+      label: 验证计划
+      description: 用什么 fixture、测试、eval 或真实但可公开的证据证明它有效？
+    validations:
+      required: true
+  - type: textarea
+    id: provenance
+    attributes:
+      label: 来源与许可证
+      description: 列出自研/移植、作者、上游 URL、版本或 commit、许可证和样本授权；纯自研也请明确写出。
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: 提交确认
+      options:
+        - label: 我确认该需求不是现有 skill 的小修改即可覆盖。
+          required: true
+        - label: 我不会提交秘密、真实用户会话、客户数据或未经授权的材料。
+          required: true
