@@ -1,9 +1,9 @@
 ---
 name: java-unit-test-hardening
 description: "为既有 Java/Maven 仓库按核心业务流建立可持续的行为测试安全网，覆盖 JUnit、Mockito、MyBatis、Testcontainers、缺陷刻画、批次状态与可复验证据。仅在用户显式调用 `$java-unit-test-hardening` 或明确点名本 skill 时使用；不要从普通单测、覆盖率、缺陷、重构、QA 或功能开发请求中自动触发。"
-compatibility: "需要 Python 3.10+、Git 与提供 fcntl 的 POSIX 环境（macOS/Linux）；Maven、JDK、Docker 和数据库导出客户端按目标仓库与所选测试层需要。"
 metadata:
   invocation: explicit-only
+  compatibility: "需要 Python 3.10+、Git 与提供 fcntl 的 POSIX 环境（macOS/Linux）；Maven、JDK、Docker 和数据库导出客户端按目标仓库与所选测试层需要。"
 ---
 
 # Java 存量单元测试加固

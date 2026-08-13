@@ -1,0 +1,29 @@
+{
+  "name": "seasonsolt-skills",
+  "version": "0.1.0",
+  "description": "A tested collection of Codex skills for writing, knowledge work, and software engineering.",
+  "author": {
+    "name": "seasonsolt",
+    "url": "https://github.com/seasonsolt"
+  },
+  "homepage": "https://github.com/seasonsolt/skills",
+  "repository": "https://github.com/seasonsolt/skills",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Seasonsolt Skills",
+    "shortDescription": "Practical skills for writing, knowledge work, and engineering.",
+    "longDescription": "A focused collection of reusable Codex skills with real workflows and validation evidence.",
+    "developerName": "seasonsolt",
+    "category": "Productivity",
+    "capabilities": [
+      "Writing",
+      "Knowledge work",
+      "Software engineering"
+    ],
+    "defaultPrompt": [
+      "Use $writing-skill-trainer to learn a reusable Writing Skill from my samples.",
+      "Use $write-daily-report to turn today's work sessions into a concise daily report.",
+      "Use $java-unit-test-hardening to build a behavioral test safety net for this Java project."
+    ]
+  }
+}

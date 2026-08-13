@@ -14,7 +14,7 @@ import time
 import unicodedata
 import urllib.error
 import urllib.request
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from statistics import mean
 from typing import Any
@@ -188,6 +188,7 @@ def training_messages(trainer_skill: str, scenario: dict[str, Any]) -> list[dict
                 ]
             )
         )
+    joined_sources = "\n\n".join(sources)
     user_prompt = f"""
 下面是已安装的 Writing Skill Trainer。请把它作为执行规范，而不是作为待评论的文章。
 
@@ -200,7 +201,7 @@ def training_messages(trainer_skill: str, scenario: dict[str, Any]) -> list[dict
 目标：{scenario['target']}
 样本均已明确授权，可用于抽象写作机制。
 
-{"\n\n".join(sources)}
+{joined_sources}
 
 执行 Phase 1 与 Phase 2：从重复证据中训练出一个最小、可执行的候选 Writing Skill。外部 benchmark harness 将负责 baseline、盲评、留出回归和 keep/revert，因此不要声称已经验证。候选 Skill 将只用于隔离测试。
 
@@ -420,7 +421,7 @@ def main() -> None:
     parser.add_argument("--model", default="deepseek-chat")
     parser.add_argument("--repetitions", type=int, default=3)
     parser.add_argument("--only", action="append", help="Run only this scenario id; repeatable")
-    parser.add_argument("--run-id", default=datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ"))
+    parser.add_argument("--run-id", default=datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ"))
     parser.add_argument("--env-file", type=Path, default=REPO_ROOT / ".env.local")
     args = parser.parse_args()
     if args.repetitions < 1:
@@ -645,7 +646,7 @@ def main() -> None:
     result = {
         "schema_version": 1,
         "run_id": args.run_id,
-        "completed_at": datetime.now(UTC).isoformat(),
+        "completed_at": datetime.now(timezone.utc).isoformat(),
         "generator": "DeepSeek API only for training, direct generation, trained generation, and judging",
         "requested_model": args.model,
         "trainer_skill_sha256": sha256_text(trainer_skill),

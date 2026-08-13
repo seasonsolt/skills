@@ -62,7 +62,7 @@ AI 写的文案有种"理性优越感"，一眼能认出、也最劝退。病征
 - 但**别矫枉过正**：去 AI 味 ≠ 越癫越好，硬凹网络烂梗、堆语气词、夸张失真会毁可信度（尤其科普/权威贴）。
 
 **流程（🔴 强制，非可选）：正文写完，必须调用 `humanizer-zh` 过一道去 AI 味——默认执行、不需用户点名、未过不算完成。**
-- **调用 humanizer-zh**（Claude Code：`/humanizer-zh [正文]`；Codex/其它无斜杠命令的 agent：读并套用 [`.claude/skills/humanizer-zh/SKILL.md`](../../humanizer-zh/SKILL.md) 的方法）——已随本仓库 `.claude/skills/`，新会话自带：按 24 项 AI 痕迹改写 + 50 分 rubric 打分，**≥40/50 才算过**，不到就继续改，并向用户报一句改了什么 + 分数。工具全表 / 即用提示词 / 检测器见 [`去AI味-工具与提示词.md`](去AI味-工具与提示词.md)。
+- **调用 humanizer-zh**（Claude Code：`/humanizer-zh [正文]`；Codex/其它 agent：加载同一发行包内的 [`humanizer-zh`](../../humanizer-zh/SKILL.md)）——按 24 项 AI 痕迹改写 + 50 分 rubric 打分，**≥40/50 才算过**，不到就继续改，并向用户报一句改了什么 + 分数。工具全表 / 即用提示词 / 检测器见 [`去AI味-工具与提示词.md`](去AI味-工具与提示词.md)。
 - **仅当 humanizer-zh 不可用**（未安装/报错）才 fallback：过一道 DeepSeek 母语重写。key 在 `.env`（`DEEPSEEK_API_KEY`），模型 `deepseek-chat`，**temperature=1.0**（实测 1.3 会玩脱成"发疯文学"、语无伦次）。
 - ⚠️ 去味时**事实、数字、出处一个字不能改**；模型（含 DeepSeek）常**替你编造第一人称经历**——必须换成你真实的事（红线：亲测/我的用法必须真）。
 

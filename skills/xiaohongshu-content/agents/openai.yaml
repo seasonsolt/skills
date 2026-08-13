@@ -1,0 +1,4 @@
+interface:
+  display_name: "小红书内容"
+  short_description: "从账号诊断、内容创作和图文配图推进到小红书草稿创建与发布"
+  default_prompt: "使用 $xiaohongshu-content 把这个主题做成一篇适合小红书的完整内容。"

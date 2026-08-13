@@ -7,3 +7,7 @@ __pycache__/
 # Local reproducibility runs may contain paid API outputs.
 marketing/writing-skill-trainer/runs/
 marketing/writing-skill-trainer/.cache/
+
+# Private Xiaohongshu drafts and account-specific archives.
+/posts/
+/skills/xiaohongshu-content/posts/
