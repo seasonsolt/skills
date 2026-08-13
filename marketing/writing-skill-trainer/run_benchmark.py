@@ -188,6 +188,7 @@ def training_messages(trainer_skill: str, scenario: dict[str, Any]) -> list[dict
                 ]
             )
         )
+    joined_sources = "\n\n".join(sources)
     user_prompt = f"""
 下面是已安装的 Writing Skill Trainer。请把它作为执行规范，而不是作为待评论的文章。
 
@@ -200,7 +201,7 @@ def training_messages(trainer_skill: str, scenario: dict[str, Any]) -> list[dict
 目标：{scenario['target']}
 样本均已明确授权，可用于抽象写作机制。
 
-{"\n\n".join(sources)}
+{joined_sources}
 
 执行 Phase 1 与 Phase 2：从重复证据中训练出一个最小、可执行的候选 Writing Skill。外部 benchmark harness 将负责 baseline、盲评、留出回归和 keep/revert，因此不要声称已经验证。候选 Skill 将只用于隔离测试。
 
