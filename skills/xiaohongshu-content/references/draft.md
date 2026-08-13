@@ -1,5 +1,7 @@
 # 建草稿
 
+先按主 Skill 第 0 步确认形态：**长文**读 `long-article.md`；以下内容仅用于**图片笔记**。
+
 入口：`creator.xiaohongshu.com/publish/publish?source=official&target=image`（图文）。
 
 流程与坑：

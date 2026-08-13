@@ -6,9 +6,9 @@
 ## 方法论在哪（唯一真源）
 
 核心 skill：[`.claude/skills/xiaohongshu-content/SKILL.md`](.claude/skills/xiaohongshu-content/SKILL.md) + 同目录 `references/`（诊断/定位/选题/文案/配图/草稿/发布，外加去 AI 味）。
-**做任何小红书相关的任务，先读它，按它走。** 七步链路，哪步都能单独用：
+**做任何小红书相关的任务，先读它，按它走。** 创作任务先确认写**长文**还是**图片笔记**，再进入七步链路；哪步都能单独用：
 
-**诊断 → 定位 → 选题 → 文案 → 配图 → 草稿 → 发布**
+**形态确认 → 诊断 → 定位 → 选题 → 文案 → 配图/编排 → 草稿 → 发布**
 
 ## 🔴 强制：写正文必须过"去 AI 味"（humanizer-zh）
 
@@ -45,7 +45,7 @@
 
 ## 公开分发副本（seasonsolt/skills）
 
-本仓库的可复用技能对外发布在公开仓库 **[seasonsolt/skills](https://github.com/seasonsolt/skills)**（`skills/xiaohongshu-content/`、`skills/humanizer-zh/`）。
+本仓库的可复用技能对外发布在公开仓库 **[seasonsolt/skills](https://github.com/seasonsolt/skills)**（`skills/xiaohongshu-content/`、`skills/humanizer-zh/`、`skills/rn-motion-director/`）。
 
 - **真源始终是本仓 `.claude/skills/`**；公开仓是下游镜像，别在公开仓直接改。
 - 改完技能后用 `python scripts/publish_skills.py --target <skills 工作副本>` 装配同步，复核后加 `--push` 推送。

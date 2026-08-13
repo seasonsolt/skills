@@ -4,10 +4,10 @@ title: 标题（≤20 字，带钩子）
 slug: 英文短横线-slug
 date: YYYY-MM-DD
 status: idea            # idea | draft | scheduled | published
-format: 图文             # 图文 | 视频
+format: 图片笔记         # 图片笔记 | 长文 | 视频
 series: 你的系列名        # 可空
 series_index: 1
-cards: 7
+cards: 7                 # 长文可写 0，并在 article/ 归档 HTML 与插图
 compliance_check: pass   # 过合规红线：无境外账号/翻墙/跨区购买
 source: 出处（转载/参考需注明；原创写"个人实操"）
 tags: [标签1, 标签2, 标签3]

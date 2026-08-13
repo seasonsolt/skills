@@ -1,0 +1,29 @@
+/* vintage · 复古科学版画/仿古纸 —— 【AI前沿速递】系列主品牌视觉 */
+* { margin:0; padding:0; box-sizing:border-box; }
+body { width:540px; height:720px; background:#f2e5c8;
+  font-family:'Hiragino Sans GB','PingFang SC',system-ui,sans-serif; color:#142624; }
+.card { width:540px; height:720px; padding:56px 48px 48px; position:relative; display:flex; flex-direction:column; overflow:hidden; background:#f2e5c8; }
+.card::before { content:''; position:absolute; inset:0; opacity:.23; pointer-events:none;
+  background-image:linear-gradient(rgba(20,38,36,.13) 1px, transparent 1px), linear-gradient(90deg, rgba(20,38,36,.13) 1px, transparent 1px);
+  background-size:28px 28px; }
+.card::after { content:''; position:absolute; inset:16px; border:1px solid rgba(20,38,36,.22); pointer-events:none; }
+.main { flex:1; display:flex; flex-direction:column; justify-content:center; gap:22px; margin-top:34px; position:relative; z-index:2; }
+.tag { display:inline-block; align-self:flex-start; padding:8px 12px 6px; border:1.5px solid rgba(20,38,36,.62);
+  font-size:20px; font-weight:800; letter-spacing:.14em; }
+h1, h2, .kicker, .decide { font-family:'Songti SC','STSong',serif; font-weight:900; letter-spacing:-.045em; }
+h1 { font-size:54px; line-height:1.15; }
+h2 { font-size:38px; line-height:1.28; }
+.kicker { font-size:44px; line-height:1.22; }
+.body-md { font-size:27px; line-height:1.62; color:#2c403c; font-weight:600; }
+.strong { font-weight:850; color:#142624; }
+.red { color:#b33a24; font-weight:900; }
+.hl { background:#e6d1aa; padding:0 6px; border-radius:2px; font-weight:800; color:#142624; }
+.sub { font-size:23px; color:#5c6f66; margin-top:6px; font-weight:650; }
+.quote-block { font-size:28px; line-height:1.55; color:#142624; font-weight:700; border-left:5px solid #b33a24; padding-left:20px; }
+.note-sm { font-size:22px; line-height:1.5; color:#5c6f66; }
+.list { font-size:26px; line-height:1.9; color:#2c403c; font-weight:600; }
+.decide { font-size:32px; line-height:1.4; color:#f7edda; background:#142624; border-left:6px solid #b33a24;
+  padding:16px 18px; letter-spacing:0; }
+.cta { font-size:22px; line-height:1.7; color:#4a5d55; }
+.badge { position:absolute; bottom:34px; right:48px; z-index:2; font-size:16px; color:#142624; opacity:.58;
+  font-weight:700; letter-spacing:.13em; }

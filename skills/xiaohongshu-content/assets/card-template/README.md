@@ -11,13 +11,15 @@
 ## 用法
 ```bash
 cp -r assets/card-template posts/<你的笔记>/cards   # 复制一份到你的笔记目录
-# 编辑 build_cards.py 里的 CARDS（每张卡的中文）和 BADGE（署名）
+# 1. 读 THEMES.md 路由表选主题，改 build_cards.py 的 THEME
+# 2. 编辑 CARDS（每张卡的中文）和 BADGE（署名）
 python3 build_cards.py                              # 生成 P1-*.png … Pn-*.png
 ```
 
-## 视觉约定
-浅米底 `#f4f2ee` · 左上大引号装饰 · 大字标题 · 红 `#d63a2c` 强调 · 黄 `#ffe27a` 高亮 · 大量留白 · 3:4。
-换你自己的品牌色就改 CSS 里那两个色值。
+## 主题
+五套主题共用同一套 class 词汇表，换 `THEME` 即整套换肤（预览见 `previews/`）：
+`receipt` 收银小票（价格/成本）· `vintage` 仿古版画（系列主视觉）· `matrix` CRT 数字雨（极客题材）· `bulletin` 黑底号外（事件贴）· `paper` 浅米引纸（轻内容）。
+选择规则和 P1 图像模型 prompt 种子见 `THEMES.md`。`.red` = 主题强调色，`.hl` = 主题高亮。
 
 ## 依赖
 本机 Google Chrome（用 headless 截图）。macOS 路径已写死在脚本里，其它系统改 `CHROME` 变量。

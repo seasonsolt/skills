@@ -1,0 +1,40 @@
+/* matrix · CRT 磷光绿终端/数字雨 —— e-acc.ai 风，工程师向题材 */
+/* 色板取自 e-acc.ai 设计 token：bg #030806 / phosphor #33ff66 / bright #a4ffc0 / dim #7da68a / amber #ffb347 */
+* { margin:0; padding:0; box-sizing:border-box; }
+body { width:540px; height:720px; background:#030806;
+  font-family:'JetBrains Mono','SF Mono',Menlo,'PingFang SC','Hiragino Sans GB',monospace; color:#c2dfc9; }
+.card { width:540px; height:720px; padding:56px 48px 44px; position:relative; display:flex; flex-direction:column; overflow:hidden;
+  background:radial-gradient(ellipse 95% 70% at 50% 38%, #06120b 0%, #030806 72%); }
+/* 扫描线 + CRT 暗角 */
+.card::before { content:''; position:absolute; inset:0; z-index:3; pointer-events:none;
+  background:repeating-linear-gradient(0deg, rgba(0,0,0,.20) 0 1px, transparent 1px 3px); }
+.card::after { content:''; position:absolute; inset:0; z-index:3; pointer-events:none;
+  box-shadow:inset 0 0 150px rgba(0,0,0,.78); }
+/* 数字雨（decor 提供列内容） */
+.rain { position:absolute; inset:0; z-index:0; line-height:1.12; }
+.rain i { position:absolute; font-style:normal; color:#33ff66; text-shadow:0 0 8px rgba(51,255,102,.35); }
+.rain i b { color:#a4ffc0; font-weight:400; text-shadow:0 0 10px rgba(164,255,192,.8); }
+.tty { position:absolute; top:22px; left:48px; right:48px; z-index:2; font-size:15px; color:#7da68a;
+  letter-spacing:.06em; border-bottom:1px solid #0d2d1c; padding-bottom:10px; }
+.main { flex:1; display:flex; flex-direction:column; justify-content:center; gap:24px; margin-top:44px; position:relative; z-index:2; }
+.tag { font-size:21px; font-weight:700; color:#7da68a; letter-spacing:.12em; }
+.tag::before { content:'[ OK ] '; color:#33ff66; }
+h1 { font-size:50px; font-weight:900; line-height:1.22; color:#33ff66;
+  text-shadow:0 0 10px rgba(51,255,102,.45), 0 0 42px rgba(51,255,102,.14); }
+h2 { font-size:35px; font-weight:800; line-height:1.32; color:#33ff66;
+  text-shadow:0 0 10px rgba(51,255,102,.40); }
+.kicker { font-size:38px; font-weight:900; line-height:1.32; color:#a4ffc0;
+  text-shadow:0 0 12px rgba(51,255,102,.40); }
+.body-md { font-size:26px; line-height:1.68; color:#c2dfc9; }
+.strong { font-weight:800; color:#eafff0; }
+.red { color:#ffb347; font-weight:900; text-shadow:0 0 10px rgba(255,179,71,.4); }
+.hl { background:rgba(51,255,102,.13); border:1px solid rgba(51,255,102,.38); padding:0 6px; border-radius:2px;
+  font-weight:800; color:#a4ffc0; }
+.sub { font-size:22px; color:#7da68a; margin-top:6px; }
+.quote-block { font-size:26px; line-height:1.6; color:#c2dfc9; font-weight:700; border-left:4px solid #33ff66;
+  padding:14px 20px; background:rgba(6,18,11,.75); }
+.note-sm { font-size:21px; line-height:1.5; color:#7da68a; }
+.list { font-size:25px; line-height:1.9; color:#c2dfc9; }
+.decide { font-size:34px; font-weight:900; line-height:1.38; color:#a4ffc0; text-shadow:0 0 12px rgba(51,255,102,.4); }
+.cta { font-size:21px; line-height:1.7; color:#7da68a; }
+.badge { position:absolute; bottom:34px; right:48px; z-index:2; font-size:17px; color:#5d8a6e; font-weight:700; letter-spacing:.06em; }
