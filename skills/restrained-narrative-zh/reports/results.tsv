@@ -1,0 +1,9 @@
+timestamp	run_id	version	prompt_id	pairwise_result	lowest_dimension	prediction_hit	status	eval_mode	note
+2026-08-31	run-01	v0-baseline	same-task-01	-	语言、声音与节奏	-	baseline	dry_run	未加载 Skill，总分 52.5
+2026-08-31	run-01	v0-baseline	transfer-01	-	场景、情绪与作者在场	-	baseline	dry_run	未加载 Skill，总分 70.5
+2026-08-31	run-01	v1	same-task-01	win	泛化与表层自由度	-	keep	dry_run	总分 81.5，vs baseline 胜出
+2026-08-31	run-01	v1	transfer-01	tie	泛化与表层自由度	-	revert	dry_run	总分 78.0，开场与 same-task-01 同形，命中坍缩检查第 1 项
+2026-08-31	run-01	v2	transfer-01	win	语言、声音与节奏	yes	keep	dry_run	新增 R-OPEN-02 开场形式随题材切换，泛化 4→8，总分 87.0
+2026-08-31	run-01	v2	same-task-01	win	泛化与表层自由度	yes	keep	dry_run	R-OPEN-02 收窄后 A 无需改写，总分维持 81.5，无退化
+2026-08-31	run-01	v2	user-delivery-openclaw	lose	说理机制与证据功能	no	blocked	user_judgment	用户判定过拟合：派生算术+机制堆满；自评 win 与用户相悖 → rubric-audit 案例 #1/#2，停止爬山
+2026-08-31	run-02	v3	user-delivery-openclaw-1p	pending	-	-	keep	dry_run	rubric v2 + M4 重写（功能方向）+ R-NEG-01 负空间；候选稿删除全部派生算术，机制 5 条降档；待用户裁决
