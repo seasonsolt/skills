@@ -11,3 +11,6 @@ marketing/writing-skill-trainer/.cache/
 # Private Xiaohongshu drafts and account-specific archives.
 /posts/
 /skills/xiaohongshu-content/posts/
+
+# Private personal writing samples for writing-skill-trainer.
+/private-samples/
