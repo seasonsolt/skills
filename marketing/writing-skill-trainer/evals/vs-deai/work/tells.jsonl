@@ -1,0 +1,30 @@
+{"draft": "direct-1/restrained-satire.md", "size": 1091, "tells": 0, "per_1000": 0.0, "by_type": {}}
+{"draft": "direct-1/tech-news.md", "size": 461, "tells": 0, "per_1000": 0.0, "by_type": {}}
+{"draft": "direct-1/twain-essay.md", "size": 607, "tells": 1, "per_1000": 1.6, "by_type": {"adverbs": 1}}
+{"draft": "direct-2/restrained-satire.md", "size": 1048, "tells": 0, "per_1000": 0.0, "by_type": {}}
+{"draft": "direct-2/tech-news.md", "size": 455, "tells": 0, "per_1000": 0.0, "by_type": {}}
+{"draft": "direct-2/twain-essay.md", "size": 583, "tells": 2, "per_1000": 3.4, "by_type": {"adverbs": 2}}
+{"draft": "humanizer-1/restrained-satire.md", "size": 1077, "tells": 0, "per_1000": 0.0, "by_type": {}}
+{"draft": "humanizer-1/tech-news.md", "size": 452, "tells": 0, "per_1000": 0.0, "by_type": {}}
+{"draft": "humanizer-1/twain-essay.md", "size": 588, "tells": 1, "per_1000": 1.7, "by_type": {"adverbs": 1}}
+{"draft": "humanizer-2/restrained-satire.md", "size": 1021, "tells": 0, "per_1000": 0.0, "by_type": {}}
+{"draft": "humanizer-2/tech-news.md", "size": 451, "tells": 0, "per_1000": 0.0, "by_type": {}}
+{"draft": "humanizer-2/twain-essay.md", "size": 577, "tells": 2, "per_1000": 3.5, "by_type": {"adverbs": 2}}
+{"draft": "humanizer-samples-1/restrained-satire.md", "size": 1068, "tells": 0, "per_1000": 0.0, "by_type": {}}
+{"draft": "humanizer-samples-1/tech-news.md", "size": 495, "tells": 0, "per_1000": 0.0, "by_type": {}}
+{"draft": "humanizer-samples-1/twain-essay.md", "size": 549, "tells": 1, "per_1000": 1.8, "by_type": {"adverbs": 1}}
+{"draft": "humanizer-samples-2/restrained-satire.md", "size": 961, "tells": 0, "per_1000": 0.0, "by_type": {}}
+{"draft": "humanizer-samples-2/tech-news.md", "size": 468, "tells": 0, "per_1000": 0.0, "by_type": {}}
+{"draft": "humanizer-samples-2/twain-essay.md", "size": 567, "tells": 2, "per_1000": 3.5, "by_type": {"adverbs": 2}}
+{"draft": "stopslop-1/restrained-satire.md", "size": 853, "tells": 0, "per_1000": 0.0, "by_type": {}}
+{"draft": "stopslop-1/tech-news.md", "size": 454, "tells": 0, "per_1000": 0.0, "by_type": {}}
+{"draft": "stopslop-1/twain-essay.md", "size": 526, "tells": 1, "per_1000": 1.9, "by_type": {"adverbs": 1}}
+{"draft": "stopslop-2/restrained-satire.md", "size": 867, "tells": 0, "per_1000": 0.0, "by_type": {}}
+{"draft": "stopslop-2/tech-news.md", "size": 466, "tells": 0, "per_1000": 0.0, "by_type": {}}
+{"draft": "stopslop-2/twain-essay.md", "size": 539, "tells": 0, "per_1000": 0.0, "by_type": {}}
+{"draft": "trained-1/restrained-satire.md", "size": 803, "tells": 0, "per_1000": 0.0, "by_type": {}}
+{"draft": "trained-1/tech-news.md", "size": 485, "tells": 0, "per_1000": 0.0, "by_type": {}}
+{"draft": "trained-1/twain-essay.md", "size": 543, "tells": 0, "per_1000": 0.0, "by_type": {}}
+{"draft": "trained-2/restrained-satire.md", "size": 853, "tells": 0, "per_1000": 0.0, "by_type": {}}
+{"draft": "trained-2/tech-news.md", "size": 463, "tells": 0, "per_1000": 0.0, "by_type": {}}
+{"draft": "trained-2/twain-essay.md", "size": 540, "tells": 0, "per_1000": 0.0, "by_type": {}}

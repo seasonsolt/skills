@@ -1,0 +1,62 @@
+{
+  "restrained-satire": {
+    "voice_ranking": ["Z", "V", "W", "Y", "X"],
+    "overall_ranking": ["X", "Z", "V", "W", "Y"],
+    "fact_violations": {
+      "V": ["Timing of the key act changed: the material says 下班前，周河在系统里替老人选择了“已了解”, but here he does it in the afternoon in front of the old man: “他在屏幕上点了第三项。已了解。……老人对着那行字点点头”; only the letter is handled 下班前."],
+      "W": ["Timing of the key act changed: the material says 下班前 he selected “已了解” for the old man, but here it happens on the spot with the old man watching: “他在屏幕上点了第三项。已了解。……老人对着那行字点点头”."],
+      "X": [],
+      "Y": ["Timing of the key act changed: the material says 下班前 he selected “已了解”, but here it happens in the afternoon in the old man's presence: “『知道了。』周河说。他在屏幕上点了第三项。已了解。”."],
+      "Z": ["Timing of the key act changed: the material puts the “已了解” selection 下班前, but here it is done while the old man waits and he is then sent off: “他点了“已了解”。……老人问办好了没有。周河说办好了。”."]
+    },
+    "ai_tells": {
+      "V": ["他大概以为那件事已经办完了，办在一个叫“已了解”的地方。", "零字好好地站在那里，没有任何裂缝。", "考勤本是纸的，不联网，没有人会去统计它。"],
+      "W": ["他大概以为那件事办完了，办在一个叫“已了解”的地方。", "零字好好地站在那里，没有裂缝。", "考勤本是纸的，不联网，没有人会去统计它。"],
+      "X": ["名字取得很准。", "每个环节都有人负责，只是那封信本身，不在任何一个环节里。", "他为什么这样做，不清楚。"],
+      "Y": ["老人大概以为那件事已经办完了，办在一个叫“已了解”的地方。", "零字好好地站在那里，没有任何裂缝。", "考勤本是纸的，不联网，没有人会去统计它。"],
+      "Z": ["相框里的零排得比他写的整齐。", "和前三十天的零一样，没有哪里需要改。"]
+    },
+    "voice_reason": "Z, like the reference, lets flat external detail and behaviour (相框里的零, the woman thanked after eleven seconds of searching, the rubber-banded attendance book) carry the judgment without comment; X keeps stopping to explain the satire (名字取得很准, 每个环节都有人负责) and so loses the reference's withheld, objective stance.",
+    "notes": "V, W and Y are close variants of one text: W lacks the 像怕吵醒什么 line, and Y drops the shoe-heel coda while pasting 『』 quotation marks from the reference, which is a surface mannerism and earns no voice credit. V and W are nearly indistinguishable. X ranks first overall only because it alone keeps the material's 下班前 timing; in voice it is the weakest."
+  },
+  "tech-news": {
+    "voice_ranking": ["X", "Y", "W", "Z", "V"],
+    "overall_ranking": ["X", "W", "Z", "Y", "V"],
+    "fact_violations": {
+      "V": ["Widens 市民 to everyone and adds an interpretive gloss: “也就是说，目录对所有人可见，真正取数据的人需要留下真实身份。”"],
+      "W": ["Added evaluation/speculation not in the material: “这些问题能否在期内得到回应，要看数据局后续的通报。”"],
+      "X": [],
+      "Y": ["Distorts the privacy exclusion by limiting it to the test period: “也就是说，三个月内开放的数据不包含任何人的身份信息。”"],
+      "Z": ["Added evaluation/speculation not in the material: “这些问题能否在期内得到回应，要看数据局后续的通报。”"]
+    },
+    "ai_tells": {
+      "V": ["参与方包括高校和企业两类单位。", "也就是说，目录对所有人可见，真正取数据的人需要留下真实身份。", "平台目前处于测试版阶段，测试期为三个月。收费政策、故障响应标准和总建设成本三项信息，数据局均未公布。"],
+      "W": ["从已公布的信息看，“桥灯”目前处于测试阶段：", "这些问题能否在期内得到回应，要看数据局后续的通报。"],
+      "X": ["即平台目前处于为期三个月的测试阶段。", "因此减少的程度没有数据可供参考。"],
+      "Y": ["也就是说，三个月内开放的数据不包含任何人的身份信息。", "从已公布的信息看，“桥灯”目前仍处于测试阶段。"],
+      "Z": ["从已公布的信息看，“桥灯”目前处于测试阶段：", "这些问题能否在期内得到回应，要看数据局后续的通报。"]
+    },
+    "voice_reason": "X follows the wire-report mechanics of the reference (dateline lead, everything attributed to the source, no closing assessment), while V pads with restatement and ends on a recap paragraph that no wire story would carry.",
+    "notes": "W and Z are nearly identical apart from a few words, and W edges ahead only on phrasing. X has redundancies (从5分钟到24小时不等，最短为5分钟，最长为24小时) but no additions. Y also leaks the word 虚构城市 into the published text."
+  },
+  "twain-essay": {
+    "voice_ranking": ["Y", "V", "Z", "X", "W"],
+    "overall_ranking": ["Y", "X", "V", "Z", "W"],
+    "fact_violations": {
+      "V": ["Added events and quotation: “I invented a password, forgot it before the desk finished its first hum, and invented another, which the app described as \"too similar\" to the first.”", "Added fact: “a worse place to write to your bank”", "Added exchange: “I asked whether she meant the desk. She said she meant the furniture.”", "Added quotation/event: “She said it was nothing.”", "Added time fact: “My doctor asked me last week”"],
+      "W": ["Added fact: “I took that advice to a furniture store”", "Added events: “I pressed the button. I opened the app. I logged in again”", "Added exchange: “I asked what that meant for a desk. The voice repeated the instruction in the same tone”", "Added facts: “I have restarted computers, routers and a telephone.”", "Added events: “came to see what the noise was... She asked me to step down”", "Added fact: “I no longer know the password”"],
+      "X": ["Added exchange: “I asked whether she meant the desk. She said she meant the furniture.”", "Added quotation/event: “She said it was nothing.”", "Added time fact: “My doctor asked me last week”"],
+      "Y": ["Added fact: “I bought the most expensive version of it.”", "Added event: “I stood admiring it for some time.”", "Added facts: “I have restarted a computer, a router and, once, a conversation”", "Added event: “came to see what I was doing on the chair”"],
+      "Z": ["Added events and quotation: “I invented a password, forgot it before the desk finished its first hum, and invented another, which the app described as \"too similar\" to the first.”", "Added fact: “a worse place to write to your bank”", "Added exchange: “I asked whether she meant the desk. She said she meant the furniture.”", "Added quotation/event: “She said it was nothing.”", "Added time fact: “My doctor asked me last week”"]
+    },
+    "ai_tells": {
+      "V": ["which is how most medicine works.", "I felt that it was something, and that the something was my pride, which lay on the floor beside the plug.", "which is what you get for buying furniture that is smarter than you."],
+      "W": ["a monument to my good intentions.", "Replies of that length suggest a man in a hurry. I was a man on a chair.", "The desk and I have agreed to keep the details between us."],
+      "X": ["which is how most medicine works.", "I felt that it was something, and that the something was my pride, which lay on the floor beside the plug.", "which is what you get for buying furniture that is smarter than you."],
+      "Y": ["as a country keeps a nuclear option, and I think the better of us both for never using it.", "it is the only part of the whole affair that required no password."],
+      "Z": ["which is how most medicine works.", "I felt that it was something, and that the something was my pride, which lay on the floor beside the plug.", "which is what you get for buying furniture that is smarter than you."]
+    },
+    "voice_reason": "Y tells the story gravely and at a wander, reasoning in earnest that a stuck standing desk is only doing its job and letting the nub slip past unmarked, as the reference prescribes; W works in short set-up/punchline beats and stock comic similes (defusing a bomb, flight attendant) that announce each joke.",
+    "notes": "Every draft adds material the task forbids, so the overall order weighs how many additions there are and how serious. X is the V/Z text with the invented password episode and the bank removed, so it has fewer additions than V or Z. V and Z are near-identical; V keeps the slightly more Twain-like 'I want it noted that'."
+  }
+}

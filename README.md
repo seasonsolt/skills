@@ -43,6 +43,8 @@
 
 [`writing-skill-trainer` 对照实验](marketing/writing-skill-trainer/)在同一模型、同一任务参数下比较直接生成与加载训练后 Skill：匿名质量偏好为 **7/9 对 2/9**，连续来源重合警报为 **0/18**。加入长度、事实和复制硬约束后，训练后胜 3、直接胜 2、双方均未通过 4；仓库保留失败结果、固定代表稿、原始 JSON、来源许可与复现脚本，不把偏好分数包装成最终通过率。
 
+[和两个去 AI 味 skill 的对照评测](marketing/writing-skill-trainer/evals/vs-deai/)（stop-slop、humanizer-zh）：三个场景里，训练出的 skill 在科技新闻和英文随笔上口吻最接近目标作者（6 次评审里分别 4 次、6 次排第一），在鲁迅式讽刺短篇上排最后，stop-slop 排第一。输的场景和全部稿件都保留在仓库里。
+
 ## 在 Codex 中手动安装
 
 Codex 的当前约定是：个人通用 skills 放在 `~/.agents/skills`，项目共享 skills 放在仓库的 `.agents/skills`；一个 skill 目录至少包含 `SKILL.md`，也可以带 `scripts/`、`references/` 和 `assets/`。官方同时建议把跨团队发行的 skills 包装成 plugin。参见 [Build skills](https://learn.chatgpt.com/docs/build-skills) 与 [Plugin packaging](https://developers.openai.com/plugins/build/plugins)。
