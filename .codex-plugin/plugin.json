@@ -21,7 +21,6 @@
       "Software engineering"
     ],
     "defaultPrompt": [
-      "Use $writing-skill-trainer to learn a reusable Writing Skill from my samples.",
       "Use $write-daily-report to turn today's work sessions into a concise daily report.",
       "Use $java-unit-test-hardening to build a behavioral test safety net for this Java project."
     ]

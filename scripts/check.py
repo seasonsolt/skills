@@ -154,19 +154,6 @@ def main() -> int:
             "test_*.py",
         ],
     )
-    tests_ok = run(
-        "writing-skill-trainer tests",
-        [
-            sys.executable,
-            "-m",
-            "unittest",
-            "discover",
-            "-s",
-            "skills/writing-skill-trainer/scripts",
-            "-p",
-            "test_*.py",
-        ],
-    ) and tests_ok
     if not quick:
         tests_ok = run(
             "java-unit-test-hardening tests",

@@ -6,7 +6,7 @@
 
 ## 为什么是这个仓库
 
-- **可验证**：脚本型 skill 提供可运行测试；Writing Skill Trainer 公开完整 A/B 实验、原始结果与失败案例。
+- **可验证**：脚本型 skill 提供可运行测试，并保留可复查证据。
 - **边界清晰**：涉及授权、隐私、生产修改、账号操作或外部系统时，skill 会说明允许范围与停止条件。
 - **可移植**：skill 从自身目录解析 `scripts/`、`references/` 和 `assets/`，不依赖维护者机器上的固定路径。
 
@@ -18,7 +18,6 @@
 
 | Skill | 用途 | 来源 | 成熟度 |
 |---|---|---|---|
-| [`writing-skill-trainer`](skills/writing-skill-trainer/) | 从授权写作样本提炼、盲评并迭代可复用 Writing Skill | First-party | Beta |
 | [`xiaohongshu-content`](skills/xiaohongshu-content/) | 小红书诊断、定位、选题、文案、配图、草稿与发布流程 | First-party | Preview |
 | [`humanizer-zh`](skills/humanizer-zh/) | 识别 24 类中文 AI 写作痕迹并自然改写 | Vendored | Upstream |
 
@@ -39,11 +38,9 @@
 
 `write-daily-report` 的本地会话采集只读取用户批准的工作范围。其脚本接受可重复的 `--work-root`，也支持用操作系统路径分隔符设置 `DAILY_REPORT_WORK_ROOTS`。
 
-## 真实验证证据
+## 已独立的 skill
 
-[`writing-skill-trainer` 对照实验](marketing/writing-skill-trainer/)在同一模型、同一任务参数下比较直接生成与加载训练后 Skill：匿名质量偏好为 **7/9 对 2/9**，连续来源重合警报为 **0/18**。加入长度、事实和复制硬约束后，训练后胜 3、直接胜 2、双方均未通过 4；仓库保留失败结果、固定代表稿、原始 JSON、来源许可与复现脚本，不把偏好分数包装成最终通过率。
-
-[和两个去 AI 味 skill 的对照评测](marketing/writing-skill-trainer/evals/vs-deai/)（stop-slop、humanizer-zh）：三个场景里，训练出的 skill 在科技新闻和英文随笔上口吻最接近目标作者（6 次评审里分别 4 次、6 次排第一），在鲁迅式讽刺短篇上排最后，stop-slop 排第一。输的场景和全部稿件都保留在仓库里。
+[`writing-skill-trainer`](https://github.com/seasonsolt/writing-skill-trainer)（从授权写作样本提炼、盲评并迭代可复用 Writing Skill）已经独立成库，后续只在新仓库维护。它的对照实验和与去 AI 味 skill 的评测也在那里。
 
 ## 在 Codex 中手动安装
 
@@ -56,8 +53,8 @@ Codex 的当前约定是：个人通用 skills 放在 `~/.agents/skills`，项�
 ```bash
 git clone --depth 1 https://github.com/seasonsolt/skills.git seasonsolt-skills
 mkdir -p ~/.agents/skills
-cp -R seasonsolt-skills/skills/writing-skill-trainer ~/.agents/skills/
-test -f ~/.agents/skills/writing-skill-trainer/SKILL.md
+cp -R seasonsolt-skills/skills/write-daily-report ~/.agents/skills/
+test -f ~/.agents/skills/write-daily-report/SKILL.md
 ```
 
 只对当前项目启用时，将目标目录复制进该项目：
@@ -74,7 +71,7 @@ test -f .agents/skills/write-daily-report/SKILL.md
 
 | 使用方式 | 状态 | 说明 |
 |---|---|---|
-| Codex plugin / `.agents/skills` | 已验证元数据与目录结构 | 6 个 skill 均带 `agents/openai.yaml`；仓库检查固定使用 Python 3.10。 |
+| Codex plugin / `.agents/skills` | 已验证元数据与目录结构 | 5 个 skill 均带 `agents/openai.yaml`；仓库检查固定使用 Python 3.10。 |
 | Claude Code | 预期可手动使用，未纳入 CI | 部分 skill 保留 Claude 风格指令；安装位置和工具名按客户端约定调整。 |
 | 其他支持 `SKILL.md` 的 agent | 预期可移植，未逐一验证 | 复制完整目录并先检查工具、网络、路径与外部动作语义。 |
 
@@ -83,7 +80,6 @@ test -f .agents/skills/write-daily-report/SKILL.md
 显式调用最可预测：
 
 ```text
-$writing-skill-trainer 请从这些已获授权的文章中提炼一个 Writing Skill，并做盲评验证。
 $write-daily-report 请只扫描 /path/to/approved/work-root，生成今天的日报。
 $java-unit-test-hardening 请为 /path/to/clean-maven-worktree 建立测试加固计划。
 ```

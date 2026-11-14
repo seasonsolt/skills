@@ -18,13 +18,6 @@
 - 许可证：上游根许可证为 MIT，版权人为 `seasonsolt`；许可证副本保留在 [`skills/xiaohongshu-content/LICENSE`](skills/xiaohongshu-content/LICENSE)。
 - 本公开目录包含后续公共化修改，不再要求贡献者回到私有上游修改。
 
-### `marketing/writing-skill-trainer/` 的来源材料
-
-- 《红楼梦》和鲁迅作品样本：Public Domain（公版）。
-- 中文维基新闻样本：CC BY 2.5。
-- 每篇材料的来源 URL、用途与 SHA-256 摘要记录在对应 Demo 的“来源与许可”表中：[`red-chamber`](marketing/writing-skill-trainer/demos/red-chamber/)、[`restrained-satire`](marketing/writing-skill-trainer/demos/restrained-satire/) 和 [`tech-news`](marketing/writing-skill-trainer/demos/tech-news/)。
-- 来源材料的许可证不自动覆盖本仓脚本、说明或生成产物；后者仍受各自适用权利与待确认的根许可证约束。
-
 ## 来源已记录、许可证范围待确认
 
 ### `skills/java-unit-test-hardening/`

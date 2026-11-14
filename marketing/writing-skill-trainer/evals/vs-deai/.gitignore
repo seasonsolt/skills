@@ -1,2 +1,0 @@
-# Judge packets are copies of work/out with random labels; rebuild with prep_judge.py.
-work/judge/*/*/
